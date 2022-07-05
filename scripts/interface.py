@@ -40,12 +40,13 @@ class Interface:
                 pass
             time.sleep(0.1)
             Vars.sleeping_time += 0.1
+            self.main_menu.sleeping_time['text'] = f"sleeping time: {round(Vars.sleeping_time, 1)}"
             if Vars.sleeping_time >= Vars.max_sleep_time:
                 os._exit(0)
 
     def create_window(self) -> None:
         self.main_root.resizable(False, False)
-        self.main_root.geometry("880x530")
+        self.main_root.geometry("870x530")
         self.main_root.config(menu = self.main_menu)
         # self.main_root.iconbitmap(r"images/icon.ico")
         self.main_root.title("SECRET MERCHANT SYSTEM")
@@ -57,7 +58,10 @@ class Interface:
         self.main_menu.trade_summary1.place(x = 10, y = 300)
         self.main_menu.trade_input1_variable = StringVar(self.main_root)
         self.main_menu.trade_input1_variable.set("selecione")
-        self.main_menu.trade_input1 = OptionMenu(self.main_root, self.main_menu.trade_input1_variable, *list(Vars.products.keys()))
+        product_options = list(Vars.products.keys())
+        if product_options == []:
+            product_options.append("selecione")
+        self.main_menu.trade_input1 = OptionMenu(self.main_root, self.main_menu.trade_input1_variable, *product_options)
         self.main_menu.trade_input1.place(x = 220, y = 300, width = 150, height = 25)
         self.main_menu.trade_input1.config(indicatoron = False)
         self.main_menu.trade_summary2 = Label(self.main_root, text = "QTD", font = self.interface_font1)
@@ -167,6 +171,8 @@ class Interface:
         self.main_menu.profit_last21days.place(x = 695, y = 70)
         self.main_menu.profit_last28days = Label(self.main_root, text = f"lucro últimos 28 dias: {Interface.profit_last_days(28)}", font = self.interface_font1)
         self.main_menu.profit_last28days.place(x = 695, y = 90)
+        self.main_menu.sleeping_time = Label(self.main_root, text = "sleeping time: ...", font = self.interface_font1)
+        self.main_menu.sleeping_time.place(x = 695, y = 510)
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
 
@@ -214,24 +220,29 @@ class Interface:
         self.main_menu.trade_date.delete(0, END)
 
     def trade_button(self) -> None:
-        product_name = self.main_menu.trade_input1_variable.get()
-        quantity = float(self.main_menu.trade_input2.get())
-        sell_price = float(self.main_menu.trade_input3.get())
-        payment_method = self.main_menu.trade_input4_variable.get()
-        buyer_name = self.main_menu.trade_input5.get()
-        total_cost = float(self.main_menu.trade_output6['text'])
-        profit = float(self.main_menu.trade_output7['text'])
-        if self.main_menu.trade_input8.get() == "":
-            transaction_date = time.strftime("%d/%b/%y")
-        else:
-            transaction_date = self.main_menu.trade_input8.get()
-        if quantity <= Vars.products[product_name]['stock']:
-            Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
-            Interface.update_trades_table(self)
-            Vars.products[product_name]['stock'] -= quantity
-            Interface.update_product_table(self)
+        Vars.sleeping_time = 0
+        try:
+            product_name = self.main_menu.trade_input1_variable.get()
+            quantity = float(self.main_menu.trade_input2.get())
+            sell_price = float(self.main_menu.trade_input3.get())
+            payment_method = self.main_menu.trade_input4_variable.get()
+            buyer_name = self.main_menu.trade_input5.get()
+            total_cost = float(self.main_menu.trade_output6['text'])
+            profit = float(self.main_menu.trade_output7['text'])
+            if self.main_menu.trade_input8.get() == "":
+                transaction_date = time.strftime("%d/%b/%y")
+            else:
+                transaction_date = self.main_menu.trade_input8.get()
+            if quantity <= Vars.products[product_name]['stock']:
+                Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
+                Interface.update_trades_table(self)
+                Vars.products[product_name]['stock'] -= quantity
+                Interface.update_product_table(self)
+        except:
+            pass
 
     def product_button(self) -> None:
+        Vars.sleeping_time = 0
         try:
             product_name = self.main_menu.newproduct_input1.get()
             buy_price = float(self.main_menu.newproduct_input2.get())
