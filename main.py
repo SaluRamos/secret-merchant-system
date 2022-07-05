@@ -6,4 +6,6 @@ from scripts.variables import Vars
 
 if __name__ == "__main__":
     os.system("clear")
+    Vars.load_products()
+    Vars.load_trades()
     Interface().create_window()

@@ -27,6 +27,7 @@ class Interface:
             time.sleep(0.1)
 
     def create_window(self) -> None:
+        print(Vars.products)
         self.main_root.resizable(False, False)
         self.main_root.geometry("700x530")
         self.main_root.config(menu = self.main_menu)
@@ -97,37 +98,57 @@ class Interface:
         self.main_menu.newproduct_input3.place(x = 530, y = 350, width = 160, height = 25)
         self.main_menu.newproduct_finish = Button(self.main_root, text = "ADICIONAR / ATUALIZAR PRODUTO", font = self.interface_font3, command = lambda *args : Interface.product_button(self))
         self.main_menu.newproduct_finish.place(x = 380, y = 375, width = 310, height = 25)
+        self.main_menu.products_summary1 = Label(self.main_root, text = "NOME", font = self.interface_font1)
+        self.main_menu.products_summary1.place(x = 380, y = 400)
+        self.main_menu.products_summary1 = Label(self.main_root, text = "CUSTO", font = self.interface_font1)
+        self.main_menu.products_summary1.place(x = 590, y = 400)
+        self.main_menu.products_summary1 = Label(self.main_root, text = "STOCK", font = self.interface_font1)
+        self.main_menu.products_summary1.place(x = 640, y = 400)
         self.main_menu.products_names = Listbox(self.main_root, font = self.interface_font2)
-        self.main_menu.products_names.place(x = 380, y = 400, width = 222, height = 120)
+        self.main_menu.products_names.place(x = 380, y = 420, width = 210, height = 100)
         self.main_menu.products_buyprice = Listbox(self.main_root, font = self.interface_font2, justify = "center")
-        self.main_menu.products_buyprice.place(x = 600, y = 400, width = 42, height = 120)
+        self.main_menu.products_buyprice.place(x = 590, y = 420, width = 50, height = 100)
         self.main_menu.products_stock = Listbox(self.main_root, font = self.interface_font2, justify = "center")
-        self.main_menu.products_stock.place(x = 640, y = 400, width = 50, height = 120)
+        self.main_menu.products_stock.place(x = 640, y = 420, width = 50, height = 100)
         Interface.update_product_table(self)
         #db trades interface
-        #produto,quantidade,preço venda,método,comprador,custo total,lucro,data
-        self.main_menu.trade_summary1 = Label(self.main_root, text = "PREÇO DE CUSTO", font = self.interface_font1)
-        self.main_menu.trade_summary1.place()
-        self.main_menu.trade_names = Listbox(self.main_root, font = self.interface_font2, bg = "black", fg  = "white")
-        self.main_menu.trade_names.place(x = 10, y = 10, width = 150, height = 280)
-        self.main_menu.trade_names.insert(999, "teste")
-
-        self.main_menu.trade_names = Listbox(self.main_root, font = self.interface_font2, bg = "black", fg  = "white")
-        self.main_menu.trade_names.place(x = 10, y = 10, width = 150, height = 280)
-        self.main_menu.trade_names.insert(999, "teste")
-
-        self.main_menu.trade_names = Listbox(self.main_root, font = self.interface_font2, bg = "black", fg  = "white")
-        self.main_menu.trade_names.place(x = 10, y = 10, width = 150, height = 280)
-        self.main_menu.trade_names.insert(999, "teste")
-
-        self.main_menu.trade_names = Listbox(self.main_root, font = self.interface_font2, bg = "black", fg  = "white")
-        self.main_menu.trade_names.place(x = 10, y = 10, width = 150, height = 280)
-        self.main_menu.trade_names.insert(999, "teste")
+        self.main_menu.trade_summary1 = Label(self.main_root, text = "PRODUTO", font = self.interface_font1)
+        self.main_menu.trade_summary1.place(x = 10, y = 10)
+        self.main_menu.trade_summary2 = Label(self.main_root, text = "QTD", font = self.interface_font1)
+        self.main_menu.trade_summary2.place(x = 160, y = 10)
+        self.main_menu.trade_summary3 = Label(self.main_root, text = "VENDA", font = self.interface_font1)
+        self.main_menu.trade_summary3.place(x = 210, y = 10)
+        self.main_menu.trade_summary4 = Label(self.main_root, text = "MÉTODO", font = self.interface_font1)
+        self.main_menu.trade_summary4.place(x = 260, y = 10)
+        self.main_menu.trade_summary5 = Label(self.main_root, text = "COMPRADOR", font = self.interface_font1)
+        self.main_menu.trade_summary5.place(x = 360, y = 10)
+        self.main_menu.trade_summary6 = Label(self.main_root, text = "CUSTO", font = self.interface_font1)
+        self.main_menu.trade_summary6.place(x = 460, y = 10)
+        self.main_menu.trade_summary7 = Label(self.main_root, text = "LUCRO", font = self.interface_font1)
+        self.main_menu.trade_summary7.place(x = 510, y = 10)
+        self.main_menu.trade_summary8 = Label(self.main_root, text = "DATA", font = self.interface_font1)
+        self.main_menu.trade_summary8.place(x = 560, y = 10)
+        self.main_menu.trade_names = Listbox(self.main_root, font = self.interface_font2)
+        self.main_menu.trade_names.place(x = 10, y = 30, width = 150, height = 265)
+        self.main_menu.trade_quantity = Listbox(self.main_root, font = self.interface_font2)
+        self.main_menu.trade_quantity.place(x = 160, y = 30, width = 50, height = 265)
+        self.main_menu.trade_sellprice = Listbox(self.main_root, font = self.interface_font2)
+        self.main_menu.trade_sellprice.place(x = 210, y = 30, width = 50, height = 265)
+        self.main_menu.trade_method = Listbox(self.main_root, font = self.interface_font2)
+        self.main_menu.trade_method.place(x = 260, y = 30, width = 100, height = 265)
+        self.main_menu.trade_buyer = Listbox(self.main_root, font = self.interface_font2)
+        self.main_menu.trade_buyer.place(x = 360, y = 30, width = 100, height = 265)
+        self.main_menu.trade_cost = Listbox(self.main_root, font = self.interface_font2)
+        self.main_menu.trade_cost.place(x = 460, y = 30, width = 50, height = 265)
+        self.main_menu.trade_profit = Listbox(self.main_root, font = self.interface_font2)
+        self.main_menu.trade_profit.place(x = 510, y = 30, width = 50, height = 265)
+        self.main_menu.trade_date = Listbox(self.main_root, font = self.interface_font2)
+        self.main_menu.trade_date.place(x = 560, y = 30, width = 130, height = 265)
+        Interface.update_trades_table(self)
         # threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
 
     def update_product_table(self) -> None:
-        #atualiza tabela de produtos
         Interface.reset_product_table(self)
         avaible_products = []
         for product_name in Vars.products.keys():
@@ -136,27 +157,57 @@ class Interface:
                 self.main_menu.products_buyprice.insert(999, Vars.products[product_name]['buy_price'])
                 self.main_menu.products_stock.insert(999, Vars.products[product_name]['stock'])
                 avaible_products.append(product_name)
-        #atualizar optionmenu dos produtos
         self.main_menu.trade_input1['menu'].delete(0, 'end')
         self.main_menu.trade_input1_variable.set("selecione")
         for i in avaible_products:
             self.main_menu.trade_input1['menu'].add_command(label = i, command = tkinter_set_it(self.main_menu.trade_input1_variable, i))
+        Interface.update_products()
 
-    def reset_product_table(self):
+    def reset_product_table(self) -> None:
         self.main_menu.products_names.delete(0, END)
         self.main_menu.products_buyprice.delete(0, END)
         self.main_menu.products_stock.delete(0, END)
 
+    def update_trades_table(self) -> None:
+        Interface.reset_product_table(self)
+        for i in Vars.trades:
+            self.main_menu.trade_names.insert(i['product'])
+            self.main_menu.trade_quantity.insert(i['quantity'])
+            self.main_menu.trade_sellprice.insert(i['sell_price'])
+            self.main_menu.trade_method.insert(i['payment_method'])
+            self.main_menu.trade_buyer.insert(i['buyer_name'])
+            self.main_menu.trade_cost.insert(i['total_cost'])
+            self.main_menu.trade_profit.insert(i['profit'])
+            self.main_menu.trade_date.insert(i['transaction_date'])
+        Interface.update_trades()
+
+    def reset_trades_table(self) -> None:
+        self.main_menu.trade_names.delete(0, END)
+        self.main_menu.trade_quantity.delete(0, END)
+        self.main_menu.trade_sellprice.delete(0, END)
+        self.main_menu.trade_method.delete(0, END)
+        self.main_menu.trade_buyer.delete(0, END)
+        self.main_menu.trade_cost.delete(0, END)
+        self.main_menu.trade_profit.delete(0, END)
+        self.main_menu.trade_date.delete(0, END)
+
     def trade_button(self) -> None:
-        product = self.main_menu.trade_input1_variable.get()
-        quantity = float(self.main_menu.trade_input2.get())
-        sell_price = float(self.main_menu.trade_input3.get())
-        payment_method = self.main_menu.trade_input4_variable.get()
-        buyer_name = self.main_menu.trade_input5.get()
-        total_cost = float(self.main_menu.trade_output6['text'])
-        profit = float(self.main_menu.trade_output7['text'])
-        transaction_date = self.main_menu.trade_output8['text']
-        Vars.trades.append({'product':product, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
+        try:
+            product_name = self.main_menu.trade_input1_variable.get()
+            quantity = float(self.main_menu.trade_input2.get())
+            sell_price = float(self.main_menu.trade_input3.get())
+            payment_method = self.main_menu.trade_input4_variable.get()
+            buyer_name = self.main_menu.trade_input5.get()
+            total_cost = float(self.main_menu.trade_output6['text'])
+            profit = float(self.main_menu.trade_output7['text'])
+            transaction_date = self.main_menu.trade_output8['text']
+            if quantity >= Vars.products[product_name]['stock']:
+                Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
+                Interface.update_trades_table(self)
+                Vars.products[product_name]['stock'] -= quantity
+                Interface.update_product_table(self)
+        except:
+            pass
 
     def product_button(self) -> None:
         try:
@@ -167,10 +218,6 @@ class Interface:
             Interface.update_product_table(self)
         except:
             pass
-
-
-
-
 
     def update_products() -> None:
         with open("products.txt", "w+") as f:
