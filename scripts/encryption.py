@@ -18,9 +18,10 @@ class Encryption:
         message = message.encode()
         salt = secrets.token_bytes(16)
         key = Encryption._derive_key(password.encode(), salt, iterations)
-        return b64e(b'%b%b%b' % (salt,iterations.to_bytes(4, 'big'),b64d(Fernet(key).encrypt(message)),))
+        return b64e(b'%b%b%b' % (salt,iterations.to_bytes(4, 'big'),b64d(Fernet(key).encrypt(message)),)).decode()
 
-    def password_decrypt(token: bytes, password: str) -> str:
+    def password_decrypt(token: str, password: str) -> str:
+        token = token.encode()
         decoded = b64d(token)
         salt, iter, token = decoded[:16], decoded[16:20], b64e(decoded[20:])
         iterations = int.from_bytes(iter, 'big')

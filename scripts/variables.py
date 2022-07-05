@@ -6,9 +6,12 @@ import os
 class Vars:
 
     encryption_key = "arnoldzilla321"
-    products = {}
+    products = {'bucha':{'stock':5, 'buy_price':2}}
     trades = []
     payment_methods = ["dinheiro", "pix", "débito", "crédito", "fiado"]
+    sleeping_time = 0
+    max_sleep_time = 300
+    months_to_number = {'Jan':1, 'Feb':2, 'Mar':3, 'Apr':4, 'May':5, 'Jun':6, 'Jul':7, 'Aug':8, 'Sep':9, 'Oct':10, 'Nov':11, 'Dec':12}
 
     def load_products() -> None:
         # if os.path.exists("products.txt") == False:
