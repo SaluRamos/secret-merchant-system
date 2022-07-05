@@ -44,6 +44,12 @@ class Interface:
             if Vars.sleeping_time >= Vars.max_sleep_time:
                 os._exit(0)
 
+    def update_profit(self) -> None:
+        self.main_menu.profit_last7days['text'] = f"lucro últimos 7 dias: {Interface.profit_last_days(7)}"
+        self.main_menu.profit_last14days['text'] = f"lucro últimos 14 dias: {Interface.profit_last_days(14)}"
+        self.main_menu.profit_last21days['text'] = f"lucro últimos 21 dias: {Interface.profit_last_days(21)}"
+        self.main_menu.profit_last28days['text'] = f"lucro últimos 28 dias: {Interface.profit_last_days(28)}"
+
     def create_window(self) -> None:
         self.main_root.resizable(False, False)
         self.main_root.geometry("870x530")
@@ -122,14 +128,18 @@ class Interface:
         self.main_menu.products_summary1.place(x = 590, y = 400)
         self.main_menu.products_summary1 = Label(self.main_root, text = "STOCK", font = self.interface_font1)
         self.main_menu.products_summary1.place(x = 640, y = 400)
-        self.main_menu.products_names = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.products_scrollbar = Scrollbar(orient = "vertical", command = self.on_scroll_products)
+        self.main_menu.products_scrollbar.place(x = 695, y = 300, width = 15, height = 223)
+        self.main_menu.products_names = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
         self.main_menu.products_names.place(x = 380, y = 420, width = 210, height = 105)
-        self.main_menu.products_buyprice = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.products_buyprice = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
         self.main_menu.products_buyprice.place(x = 590, y = 420, width = 50, height = 105)
-        self.main_menu.products_stock = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.products_stock = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
         self.main_menu.products_stock.place(x = 640, y = 420, width = 50, height = 105)
         Interface.update_product_table(self)
         #db trades interface
+        self.main_menu.trade_scrollbar = Scrollbar(orient = "vertical", command = self.on_scroll_trades)
+        self.main_menu.trade_scrollbar.place(x = 695, y = 10, width = 15, height = 285)
         self.main_menu.trade_summary1 = Label(self.main_root, text = "PRODUTO", font = self.interface_font1)
         self.main_menu.trade_summary1.place(x = 10, y = 10)
         self.main_menu.trade_summary2 = Label(self.main_root, text = "QTD", font = self.interface_font1)
@@ -146,35 +156,51 @@ class Interface:
         self.main_menu.trade_summary7.place(x = 510, y = 10)
         self.main_menu.trade_summary8 = Label(self.main_root, text = "DATA", font = self.interface_font1)
         self.main_menu.trade_summary8.place(x = 560, y = 10)
-        self.main_menu.trade_names = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.trade_names = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_names.place(x = 10, y = 30, width = 150, height = 265)
-        self.main_menu.trade_quantity = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.trade_quantity = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_quantity.place(x = 160, y = 30, width = 50, height = 265)
-        self.main_menu.trade_sellprice = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.trade_sellprice = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_sellprice.place(x = 210, y = 30, width = 50, height = 265)
-        self.main_menu.trade_method = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.trade_method = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_method.place(x = 260, y = 30, width = 100, height = 265)
-        self.main_menu.trade_buyer = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.trade_buyer = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_buyer.place(x = 360, y = 30, width = 100, height = 265)
-        self.main_menu.trade_cost = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.trade_cost = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_cost.place(x = 460, y = 30, width = 50, height = 265)
-        self.main_menu.trade_profit = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.trade_profit = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_profit.place(x = 510, y = 30, width = 50, height = 265)
-        self.main_menu.trade_date = Listbox(self.main_root, font = self.interface_font2, justify = "center")
+        self.main_menu.trade_date = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_date.place(x = 560, y = 30, width = 130, height = 265)
         Interface.update_trades_table(self)
-        self.main_menu.profit_last7days = Label(self.main_root, text = f"lucro últimos 7 dias: {Interface.profit_last_days(7)}", font = self.interface_font1)
-        self.main_menu.profit_last7days.place(x = 695, y = 30)
-        self.main_menu.profit_last14days = Label(self.main_root, text = f"lucro últimos 14 dias: {Interface.profit_last_days(14)}", font = self.interface_font1)
-        self.main_menu.profit_last14days.place(x = 695, y = 50)
-        self.main_menu.profit_last21days = Label(self.main_root, text = f"lucro últimos 21 dias: {Interface.profit_last_days(21)}", font = self.interface_font1)
-        self.main_menu.profit_last21days.place(x = 695, y = 70)
-        self.main_menu.profit_last28days = Label(self.main_root, text = f"lucro últimos 28 dias: {Interface.profit_last_days(28)}", font = self.interface_font1)
-        self.main_menu.profit_last28days.place(x = 695, y = 90)
+        self.main_menu.profit_last7days = Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last7days.place(x = 715, y = 30)
+        self.main_menu.profit_last14days = Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last14days.place(x = 715, y = 50)
+        self.main_menu.profit_last21days = Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last21days.place(x = 715, y = 70)
+        self.main_menu.profit_last28days = Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last28days.place(x = 715, y = 90)
+        Interface.update_profit(self)
         self.main_menu.sleeping_time = Label(self.main_root, text = "sleeping time: ...", font = self.interface_font1)
-        self.main_menu.sleeping_time.place(x = 695, y = 510)
+        self.main_menu.sleeping_time.place(x = 715, y = 510)
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
+
+    def on_scroll_products(self, *args):
+        self.main_menu.products_names.yview(*args)
+        self.main_menu.products_buyprice.yview(*args)
+        self.main_menu.products_stock.yview(*args)
+
+    def on_scroll_trades(self, *args):
+        self.main_menu.trade_names.yview(*args)
+        self.main_menu.trade_quantity.yview(*args)
+        self.main_menu.trade_sellprice.yview(*args)
+        self.main_menu.trade_method.yview(*args)
+        self.main_menu.trade_buyer.yview(*args)
+        self.main_menu.trade_cost.yview(*args)
+        self.main_menu.trade_profit.yview(*args)
+        self.main_menu.trade_date.yview(*args)
 
     def update_product_table(self) -> None:
         Interface.reset_product_table(self)
@@ -232,12 +258,14 @@ class Interface:
             if self.main_menu.trade_input8.get() == "":
                 transaction_date = time.strftime("%d/%b/%y")
             else:
+                #filtra a data
                 transaction_date = self.main_menu.trade_input8.get()
             if quantity <= Vars.products[product_name]['stock']:
                 Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
                 Interface.update_trades_table(self)
                 Vars.products[product_name]['stock'] -= quantity
                 Interface.update_product_table(self)
+            Interface.update_profit(self)
         except:
             pass
 

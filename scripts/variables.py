@@ -1,19 +1,13 @@
 from scripts.general import General
 import os
 from scripts.encryption import Encryption
-# from getpass import getpass
 
 class Vars:
 
-    while True:
-        # encryption_key = getpass("type password key: ")
-        encryption_key = General.get_password("type password key: ")
-        sure = input("are you sure? (y/n)")
-        if sure.lower() == "y":
-            break
+    encryption_key = ""
     products = {}
     trades = []
-    payment_methods = ["dinheiro", "pix", "débito", "crédito", "fiado", "consumo"]
+    payment_methods = ["dinheiro", "pix", "débito", "crédito", "fiado", "consumo", "desconhecido"]
     sleeping_time = 0
     max_sleep_time = 300
     months_to_number = {'Jan':1, 'Feb':2, 'Mar':3, 'Apr':4, 'May':5, 'Jun':6, 'Jul':7, 'Aug':8, 'Sep':9, 'Oct':10, 'Nov':11, 'Dec':12}
