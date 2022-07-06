@@ -30,7 +30,7 @@ class Interface:
             trade_timestamp = trade_dt.replace(tzinfo = datetime.timezone.utc).timestamp()
             if (atual_timestamp-trade_timestamp)/86400 <= max_days:
                 profit += i['profit']
-        return profit
+        return round(profit, 2)
 
     def main_loop(self) -> None:
         while True:
@@ -113,7 +113,7 @@ class Interface:
         self.main_menu.trade_input8.place(x = 220, y = 475, width = 150, height = 25)
         self.main_menu.trade_finish = Button(self.main_root, text = "FINALIZAR TRANSAÇÃO", font = self.interface_font3, command = lambda *args : Interface.trade_button(self))
         self.main_menu.trade_finish.place(x = 10, y = 500, width = 360, height = 25)
-        self.main_menu.trade_error = Label(self.main_root, text = "...", font = self.interface_font3, fg = "red")
+        self.main_menu.trade_error = Label(self.main_root, text = "", font = self.interface_font3, fg = "red")
         self.main_menu.trade_error.place(x = 10, y = 525, width = 360)
         #new/update product interface
         self.main_menu.newproduct_summary1 = Label(self.main_root, text = "NOME", font = self.interface_font1)
