@@ -275,7 +275,15 @@ class Interface:
                     raise Exception("BAD_DATE")
             if quantity <= Vars.products[product_name]['stock']:
                 Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
-                Interface.update_trades_table(self)
+                self.main_menu.trade_names.insert(0, product_name)
+                self.main_menu.trade_quantity.insert(0, quantity)
+                self.main_menu.trade_sellprice.insert(0, sell_price)
+                self.main_menu.trade_method.insert(0, payment_method)
+                self.main_menu.trade_buyer.insert(0, buyer_name)
+                self.main_menu.trade_cost.insert(0, total_cost)
+                self.main_menu.trade_profit.insert(0, profit)
+                self.main_menu.trade_date.insert(0, transaction_date)
+                Interface.update_trades()
                 Vars.products[product_name]['stock'] -= quantity
                 Interface.update_product_table(self)
             else:
