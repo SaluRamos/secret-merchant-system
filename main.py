@@ -1,5 +1,4 @@
 import os
-from tkinter import *
 from scripts.encryption import Encryption
 from scripts.interface import Interface
 from scripts.variables import Vars

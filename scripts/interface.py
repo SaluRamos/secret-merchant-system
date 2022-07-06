@@ -1,4 +1,3 @@
-from turtle import width
 from scripts.variables import Vars
 from scripts.encryption import Encryption
 from tkinter import *
@@ -18,8 +17,16 @@ class Interface:
         profit = 0
         atual_timestamp = time.time()
         for i in Vars.trades:
-            trade_date = i['transaction_date'].split(" ")[0]
-            trade_dt = datetime.datetime(int(f"20{trade_date.split('/')[2]}"), Vars.months_to_number[trade_date.split("/")[1]], int(trade_date.split("/")[0]))
+            trade_date = i['transaction_date'].split(" ")[0].lower()
+            if len(trade_date.split('/')[2]) == 2:
+                trade_year = int(f"20{trade_date.split('/')[2]}")
+            else:
+                trade_year = int(trade_date.split('/')[2])
+            if trade_date.split("/")[1] not in Vars.months_to_number.keys():
+                trade_month = int(trade_date.split("/")[1])
+            else:
+                trade_month = Vars.months_to_number[trade_date.split("/")[1]]
+            trade_dt = datetime.datetime(trade_year, trade_month, int(trade_date.split("/")[0])) #year, month, day
             trade_timestamp = trade_dt.replace(tzinfo = datetime.timezone.utc).timestamp()
             if (atual_timestamp-trade_timestamp)/86400 <= max_days:
                 profit += i['profit']
@@ -35,8 +42,7 @@ class Interface:
                 profit = round(total_cost-(product_cost*quantity), 2)
                 self.main_menu.trade_totalcost_variable.set(str(total_cost))
                 self.main_menu.trade_profit_variable.set(str(profit))
-            except Exception as e:
-                # print(f"cant: {str(e)}")
+            except:
                 pass
             time.sleep(0.1)
             Vars.sleeping_time += 0.1
@@ -52,7 +58,7 @@ class Interface:
 
     def create_window(self) -> None:
         self.main_root.resizable(False, False)
-        self.main_root.geometry("870x530")
+        self.main_root.geometry("895x565")
         self.main_root.config(menu = self.main_menu)
         # self.main_root.iconbitmap(r"images/icon.ico")
         self.main_root.title("SECRET MERCHANT SYSTEM")
@@ -101,12 +107,14 @@ class Interface:
         self.main_menu.trade_profit_variable.set("...")
         self.main_menu.trade_output7 = Label(self.main_root, textvariable = self.main_menu.trade_profit_variable, font = self.interface_font1, justify = "center")
         self.main_menu.trade_output7.place(x = 220, y = 450, width = 150)
-        self.main_menu.trade_summary8 = Label(self.main_root, text = "DATA", font = self.interface_font1)
+        self.main_menu.trade_summary8 = Label(self.main_root, text = "DATA (DIA/MÊS/ANO)", font = self.interface_font1)
         self.main_menu.trade_summary8.place(x = 10, y = 475)
         self.main_menu.trade_input8 = Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
         self.main_menu.trade_input8.place(x = 220, y = 475, width = 150, height = 25)
         self.main_menu.trade_finish = Button(self.main_root, text = "FINALIZAR TRANSAÇÃO", font = self.interface_font3, command = lambda *args : Interface.trade_button(self))
         self.main_menu.trade_finish.place(x = 10, y = 500, width = 360, height = 25)
+        self.main_menu.trade_error = Label(self.main_root, text = "ERRO", font = self.interface_font1)
+        self.main_menu.trade_error.place(x = 10, y = 530, width = 360)
         #new/update product interface
         self.main_menu.newproduct_summary1 = Label(self.main_root, text = "NOME", font = self.interface_font1)
         self.main_menu.newproduct_summary1.place(x = 380, y = 300)
@@ -129,13 +137,13 @@ class Interface:
         self.main_menu.products_summary1 = Label(self.main_root, text = "STOCK", font = self.interface_font1)
         self.main_menu.products_summary1.place(x = 640, y = 400)
         self.main_menu.products_scrollbar = Scrollbar(orient = "vertical", command = self.on_scroll_products)
-        self.main_menu.products_scrollbar.place(x = 695, y = 300, width = 15, height = 223)
+        self.main_menu.products_scrollbar.place(x = 695, y = 300, width = 15, height = 258)
         self.main_menu.products_names = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
-        self.main_menu.products_names.place(x = 380, y = 420, width = 210, height = 105)
+        self.main_menu.products_names.place(x = 380, y = 420, width = 210, height = 140)
         self.main_menu.products_buyprice = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
-        self.main_menu.products_buyprice.place(x = 590, y = 420, width = 50, height = 105)
+        self.main_menu.products_buyprice.place(x = 590, y = 420, width = 50, height = 140)
         self.main_menu.products_stock = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
-        self.main_menu.products_stock.place(x = 640, y = 420, width = 50, height = 105)
+        self.main_menu.products_stock.place(x = 640, y = 420, width = 50, height = 140)
         Interface.update_product_table(self)
         #db trades interface
         self.main_menu.trade_scrollbar = Scrollbar(orient = "vertical", command = self.on_scroll_trades)
@@ -248,18 +256,21 @@ class Interface:
     def trade_button(self) -> None:
         Vars.sleeping_time = 0
         try:
-            product_name = self.main_menu.trade_input1_variable.get()
+            product_name = self.main_menu.trade_input1_variable.get().lower()
             quantity = float(self.main_menu.trade_input2.get())
             sell_price = float(self.main_menu.trade_input3.get())
-            payment_method = self.main_menu.trade_input4_variable.get()
-            buyer_name = self.main_menu.trade_input5.get()
+            payment_method = self.main_menu.trade_input4_variable.get().lower()
+            buyer_name = self.main_menu.trade_input5.get().lower()
             total_cost = float(self.main_menu.trade_output6['text'])
             profit = float(self.main_menu.trade_output7['text'])
             if self.main_menu.trade_input8.get() == "":
                 transaction_date = time.strftime("%d/%b/%y")
             else:
-                #filtra a data
-                transaction_date = self.main_menu.trade_input8.get()
+                transaction_date = self.main_menu.trade_input8.get().lower()
+                trade_year = transaction_date.split("/")[2]
+                if len(transaction_date.split("/")) != 3 or len(trade_year) == 1 or len(trade_year) == 3:
+                    print("wrong date")
+                    raise Exception("bad_date")
             if quantity <= Vars.products[product_name]['stock']:
                 Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
                 Interface.update_trades_table(self)
@@ -272,7 +283,7 @@ class Interface:
     def product_button(self) -> None:
         Vars.sleeping_time = 0
         try:
-            product_name = self.main_menu.newproduct_input1.get()
+            product_name = self.main_menu.newproduct_input1.get().lower()
             buy_price = float(self.main_menu.newproduct_input2.get())
             stock = float(self.main_menu.newproduct_input3.get())
             Vars.products[product_name] = {'buy_price':buy_price, 'stock':stock}
