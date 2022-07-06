@@ -58,7 +58,7 @@ class Interface:
 
     def create_window(self) -> None:
         self.main_root.resizable(False, False)
-        self.main_root.geometry("895x565")
+        self.main_root.geometry("900x600")
         self.main_root.config(menu = self.main_menu)
         # self.main_root.iconbitmap(r"images/icon.ico")
         self.main_root.title("SECRET MERCHANT SYSTEM")
@@ -113,8 +113,10 @@ class Interface:
         self.main_menu.trade_input8.place(x = 220, y = 475, width = 150, height = 25)
         self.main_menu.trade_finish = Button(self.main_root, text = "FINALIZAR TRANSAÇÃO", font = self.interface_font3, command = lambda *args : Interface.trade_button(self))
         self.main_menu.trade_finish.place(x = 10, y = 500, width = 360, height = 25)
-        self.main_menu.trade_error = Label(self.main_root, text = "", font = self.interface_font3, fg = "red")
-        self.main_menu.trade_error.place(x = 10, y = 525, width = 360)
+        self.main_menu.trade_error = Label(self.main_root, text = "teste\nteste", font = self.interface_font3, fg = "red", bg = "cyan")
+        self.main_menu.trade_error.place(x = 10, y = 535, width = 360)
+        self.main_menu.trade_remove = Button(self.main_root, text = "REMOVER ÚLTIMA TRANSAÇÃO", font = self.interface_font3, command = lambda *args : Interface.remove_last_trade(self))
+        self.main_menu.trade_remove.place(x = 10, y = 570, width = 360, height = 25)
         #new/update product interface
         self.main_menu.newproduct_summary1 = Label(self.main_root, text = "NOME", font = self.interface_font1)
         self.main_menu.newproduct_summary1.place(x = 380, y = 300)
@@ -137,13 +139,13 @@ class Interface:
         self.main_menu.products_summary1 = Label(self.main_root, text = "STOCK", font = self.interface_font1)
         self.main_menu.products_summary1.place(x = 640, y = 400)
         self.main_menu.products_scrollbar = Scrollbar(orient = "vertical", command = self.on_scroll_products)
-        self.main_menu.products_scrollbar.place(x = 695, y = 300, width = 15, height = 258)
+        self.main_menu.products_scrollbar.place(x = 695, y = 300, width = 15, height = 293)
         self.main_menu.products_names = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
-        self.main_menu.products_names.place(x = 380, y = 420, width = 210, height = 140)
+        self.main_menu.products_names.place(x = 380, y = 420, width = 210, height = 175)
         self.main_menu.products_buyprice = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
-        self.main_menu.products_buyprice.place(x = 590, y = 420, width = 50, height = 140)
+        self.main_menu.products_buyprice.place(x = 590, y = 420, width = 50, height = 175)
         self.main_menu.products_stock = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
-        self.main_menu.products_stock.place(x = 640, y = 420, width = 50, height = 140)
+        self.main_menu.products_stock.place(x = 640, y = 420, width = 50, height = 175)
         Interface.update_product_table(self)
         #db trades interface
         self.main_menu.trade_scrollbar = Scrollbar(orient = "vertical", command = self.on_scroll_trades)
@@ -191,7 +193,7 @@ class Interface:
         self.main_menu.profit_last28days.place(x = 715, y = 90)
         Interface.update_profit(self)
         self.main_menu.sleeping_time = Label(self.main_root, text = "sleeping time: ...", font = self.interface_font1)
-        self.main_menu.sleeping_time.place(x = 715, y = 540)
+        self.main_menu.sleeping_time.place(x = 715, y = 575)
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
 
@@ -252,6 +254,10 @@ class Interface:
         self.main_menu.trade_cost.delete(0, END)
         self.main_menu.trade_profit.delete(0, END)
         self.main_menu.trade_date.delete(0, END)
+
+    def remove_last_trade(self) -> None:
+        Vars.trades.pop()
+        Interface.update_trades_table(self)
 
     def trade_button(self) -> None:
         Vars.sleeping_time = 0
