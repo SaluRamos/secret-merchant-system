@@ -2,7 +2,7 @@ from scripts.variables import Vars
 from scripts.encryption import Encryption
 from tkinter import *
 from tkinter import _setit as tkinter_set_it
-from colorama import Style, Fore
+# from colorama import Style, Fore
 import threading
 import time
 import os
@@ -14,24 +14,50 @@ class Interface:
         self.main_root = Tk()
         self.main_menu = Menu(self.main_root)
 
+    def verify_date(transaction_date: str) -> None:
+        transaction_date = transaction_date.lower()
+        trade_year = transaction_date.split("/")[2]
+        trade_day = transaction_date.split("/")[0]
+        int(trade_year) #year_verification
+        int(trade_day) #day_verification
+        if len(transaction_date.split("/")) != 3 or len(trade_year) == 1 or len(trade_year) == 3 or len(trade_day) > 2:
+            raise Exception("BAD_DATE")
+
+    def get_date_timestamp(trade_date: str) -> float:
+        trade_date = trade_date.lower()
+        if len(trade_date.split('/')[2]) == 2:
+            trade_year = int(f"20{trade_date.split('/')[2]}")
+        else:
+            trade_year = int(trade_date.split('/')[2])
+        if trade_date.split("/")[1] not in Vars.months_to_number.keys():
+            trade_month = int(trade_date.split("/")[1])
+        else:
+            trade_month = Vars.months_to_number[trade_date.split("/")[1]]
+        trade_dt = datetime.datetime(trade_year, trade_month, int(trade_date.split("/")[0])) #year, month, day
+        trade_timestamp = trade_dt.replace(tzinfo = datetime.timezone.utc).timestamp()
+        return trade_timestamp
+
     def profit_last_days(max_days: int) -> float:
         profit = 0
         atual_timestamp = time.time()
         for i in Vars.trades:
             trade_date = i['transaction_date'].split(" ")[0].lower()
-            if len(trade_date.split('/')[2]) == 2:
-                trade_year = int(f"20{trade_date.split('/')[2]}")
-            else:
-                trade_year = int(trade_date.split('/')[2])
-            if trade_date.split("/")[1] not in Vars.months_to_number.keys():
-                trade_month = int(trade_date.split("/")[1])
-            else:
-                trade_month = Vars.months_to_number[trade_date.split("/")[1]]
-            trade_dt = datetime.datetime(trade_year, trade_month, int(trade_date.split("/")[0])) #year, month, day
-            trade_timestamp = trade_dt.replace(tzinfo = datetime.timezone.utc).timestamp()
-            if (atual_timestamp-trade_timestamp)/86400 <= max_days:
+            trade_timestamp = Interface.get_date_timestamp(trade_date)
+            if (atual_timestamp - trade_timestamp)/86400 <= max_days:
                 profit += i['profit']
         return round(profit, 2)
+
+    def get_product_info(product_name: str, from_date: str) -> dict:
+        profit = 0
+        sold_quantity = 0
+        sold_buyers = 0
+        min_valid_timestamp = Interface.get_date_timestamp(from_date)
+        for trade in Vars.trades:
+            if product_name in trade['product'] and Interface.get_date_timestamp(trade['transaction_date']) >= min_valid_timestamp:
+                profit += trade['profit']
+                sold_quantity += trade['quantity']
+                sold_buyers += 1
+        return {'profit':round(profit, 2), 'sold_quantity':sold_quantity, 'sold_buyers':sold_buyers}
 
     def main_loop(self) -> None:
         while True:
@@ -273,13 +299,8 @@ class Interface:
             if self.main_menu.trade_input8.get() == "":
                 transaction_date = time.strftime("%d/%b/%y")
             else:
-                transaction_date = self.main_menu.trade_input8.get().lower()
-                trade_year = transaction_date.split("/")[2]
-                trade_day = transaction_date.split("/")[0]
-                year_verification = int(trade_year)
-                day_verification = int(trade_day)
-                if len(transaction_date.split("/")) != 3 or len(trade_year) == 1 or len(trade_year) == 3 or len(trade_day) > 2:
-                    raise Exception("BAD_DATE")
+                transaction_date = self.main_menu.trade_input8.get()
+                Interface.verify_date(transaction_date)
             if quantity <= Vars.products[product_name]['stock']:
                 Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
                 self.main_menu.trade_names.insert(0, product_name)
@@ -344,7 +365,5 @@ class Interface:
                     encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
                     Vars.trades[index]['encrypted_line'] = encrypted_message
                     f.write(f"{encrypted_message}\n")
-                    print(f"{encrypted_message}\n")
                 else:
                     f.write(f"{trade['encrypted_line']}\n")
-                    print(f"{trade['encrypted_line']}\n")

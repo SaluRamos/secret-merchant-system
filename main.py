@@ -20,4 +20,5 @@ if __name__ == "__main__":
     os.system("clear")
     if Vars.products == {} and Vars.trades == []:
         print("THIS WILL BE YOUR NEW PASSWORD! REMEMBER IT!")
-    Interface().create_window()
+    print(Interface.get_product_info("pren", "16/06/22"))
+    # Interface().create_window()
