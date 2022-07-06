@@ -7,10 +7,10 @@ class Vars:
     encryption_key = ""
     products = {}
     trades = []
-    payment_methods = ["dinheiro", "pix", "débito", "crédito", "fiado", "consumo", "desconhecido"]
+    payment_methods = ["dinheiro", "pix", "débito", "crédito", "fiado", "consumo", "desconhecido", "perdido/roubado"]
     sleeping_time = 0
     max_sleep_time = 300
-    months_to_number = {'Jan':1, 'Feb':2, 'Mar':3, 'Apr':4, 'May':5, 'Jun':6, 'Jul':7, 'Aug':8, 'Sep':9, 'Oct':10, 'Nov':11, 'Dec':12}
+    months_to_number = {'jan':1, 'feb':2, 'mar':3, 'apr':4, 'may':5, 'jun':6, 'jul':7, 'aug':8, 'sep':9, 'oct':10, 'nov':11, 'dec':12}
 
     def load_products() -> None:
         if os.path.exists("products.txt") == False:
