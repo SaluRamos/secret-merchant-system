@@ -58,7 +58,7 @@ class Interface:
                 profit += trade['profit']
                 sold_quantity += trade['quantity']
                 sold_buyers += 1
-        return {'profit':round(profit, 2), 'sold_quantity':sold_quantity, 'sold_buyers':sold_buyers}
+        return {'profit':round(profit, 2), 'sold_quantity':round(sold_quantity, 2), 'sold_buyers':sold_buyers}
 
     def main_loop(self) -> None:
         while True:
@@ -236,6 +236,12 @@ class Interface:
         self.main_menu.search_date.place(x = 850, y = 380, width = 100, height = 25)
         self.main_menu.search_button = Button(self.main_root, text = "PESQUISAR INFO DO PRODUTO", font = self.interface_font2, command = lambda *args : Interface.search_button(self))
         self.main_menu.search_button.place(x = 715, y = 410, width = 235, height = 25)
+        self.main_menu.search_result_profit = Label(self.main_root, text = "LUCRO DO PRODUTO: ...", font = self.interface_font1)
+        self.main_menu.search_result_profit.place(x = 715, y = 440)
+        self.main_menu.search_result_totalbuyers = Label(self.main_root, text = "TOTAL DE COMPRADORES: ...", font = self.interface_font1)
+        self.main_menu.search_result_totalbuyers.place(x = 715, y = 470)
+        self.main_menu.search_result_soldquantity = Label(self.main_root, text = "TOTAL VENDIDO: ...", font = self.interface_font1)
+        self.main_menu.search_result_soldquantity.place(x = 715, y = 500)
         #main_loop thread and tkinter loop
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
@@ -378,7 +384,9 @@ class Interface:
             date = self.main_menu.search_date.get()
             Interface.verify_date(date)
             product_info = Interface.get_product_info(name, date)
-            print(product_info)
+            self.main_menu.search_result_profit['text'] = f"LUCRO DO PRODUTO: {product_info['profit']}"
+            self.main_menu.search_result_totalbuyers['text'] = f"TOTAL DE COMPRADORES: {product_info['sold_buyers']}"
+            self.main_menu.search_result_soldquantity['text'] = f"TOTAL VENDIDO: {product_info['sold_quantity']}"
         except Exception as e:
             if "list index out of range" in str(e) or str(e) == "BAD_DATE":
                 self.main_menu.trade_error['text'] = "WRONG DATE"
