@@ -60,6 +60,36 @@ class Interface:
                 sold_buyers += 1
         return {'profit':round(profit, 2), 'sold_quantity':round(sold_quantity, 2), 'sold_buyers':sold_buyers}
 
+    def get_trades_profit_insights() -> dict:
+        profits = {}
+        for trade in Vars.trades:
+            if trade['profit'] > 0:
+                if trade['product'] not in profits.keys():
+                    profits[trade['product']] = trade['profit']
+                else:
+                    profits[trade['product']] += trade['profit']
+        for i in profits.keys():
+            profits[i] = round(profits[i], 2)
+        return profits
+
+    def get_trades_qtd_insights() -> dict:
+        quantitys = {}
+        for trade in Vars.trades:
+            if trade['profit'] > 0:
+                if f"{trade['product']} {trade['quantity']}" not in quantitys.keys():
+                    quantitys[f"{trade['product']} {trade['quantity']}"] = 1
+                else:
+                    quantitys[f"{trade['product']} {trade['quantity']}"] += 1
+        return quantitys
+
+    def rename_trades_product_name(self, from_names: list, to_name: str) -> None:
+        trades_copy = Vars.trades.copy()
+        for index, trade in enumerate(trades_copy):
+            if trade['product'] in from_names:
+                Vars.trades[index]['product'] = to_name
+        Interface.update_trades_table(self)
+        Interface.full_update_trades()
+
     def main_loop(self) -> None:
         while True:
             try:
@@ -163,11 +193,11 @@ class Interface:
         self.main_menu.newproduct_finish = Button(self.main_root, text = "REMOVER PRODUTO POR NOME", font = self.interface_font2, command = lambda *args : Interface.remove_product(self))
         self.main_menu.newproduct_finish.place(x = 380, y = 405, width = 310, height = 25)
         self.main_menu.products_summary1 = Label(self.main_root, text = "NOME", font = self.interface_font1)
-        self.main_menu.products_summary1.place(x = 380, y = 430)
+        self.main_menu.products_summary1.place(x = 380, y = 435)
         self.main_menu.products_summary1 = Label(self.main_root, text = "CUSTO", font = self.interface_font1)
-        self.main_menu.products_summary1.place(x = 590, y = 430)
+        self.main_menu.products_summary1.place(x = 590, y = 435)
         self.main_menu.products_summary1 = Label(self.main_root, text = "STOCK", font = self.interface_font1)
-        self.main_menu.products_summary1.place(x = 640, y = 430)
+        self.main_menu.products_summary1.place(x = 640, y = 435)
         self.main_menu.products_scrollbar = Scrollbar(orient = "vertical", command = self.on_scroll_products)
         self.main_menu.products_scrollbar.place(x = 695, y = 300, width = 15, height = 293)
         self.main_menu.products_names = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
@@ -394,8 +424,10 @@ class Interface:
     def update_products() -> None:
         with open("products.txt", "w") as f:
             pass
+        amount_products = len(Vars.products)
         with open("products.txt", "a") as f:
-            for product in Vars.products.keys():
+            for index, product in enumerate(Vars.products.keys()):
+                # print(f"writing trade {index + 1} of {amount_products}")
                 if "encrypted_line" not in Vars.products[product].keys():
                     message = f"{product},{Vars.products[product]['buy_price']},{Vars.products[product]['stock']}"
                     encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
@@ -407,8 +439,10 @@ class Interface:
     def update_trades() -> None:
         with open("trades.txt", "w") as f:
             pass
+        amount_trades = len(Vars.trades)
         with open("trades.txt", "a") as f:
             for index, trade in enumerate(Vars.trades):
+                # print(f"writing trade {index + 1} of {amount_trades}")
                 if "encrypted_line" not in trade.keys():
                     message = ""
                     for key in trade.keys():
@@ -420,3 +454,19 @@ class Interface:
                     f.write(f"{encrypted_message}\n")
                 else:
                     f.write(f"{trade['encrypted_line']}\n")
+
+    def full_update_trades() -> None:
+        with open("trades.txt", "w") as f:
+            pass
+        amount_trades = len(Vars.trades)
+        with open("trades.txt", "a") as f:
+            for index, trade in enumerate(Vars.trades):
+                print(f"writing trade {index + 1} of {amount_trades}")
+                message = ""
+                for key in trade.keys():
+                    if key != "encrypted_line":
+                        message = f"{message}{trade[key]},"
+                message = message[0:len(message)-1]
+                encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
+                Vars.trades[index]['encrypted_line'] = encrypted_message
+                f.write(f"{encrypted_message}\n")

@@ -19,6 +19,8 @@ if __name__ == "__main__":
         else:
             os._exit(0)
     os.system("clear")
+    # print(Interface.get_trades_profit_insights())
+    print(Interface.get_trades_qtd_insights())
     if Vars.products == {} and Vars.trades == []:
         print("THIS WILL BE YOUR NEW PASSWORD! REMEMBER IT!")
     Interface().create_window()
