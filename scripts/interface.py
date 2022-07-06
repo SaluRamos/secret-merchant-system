@@ -2,6 +2,7 @@ from scripts.variables import Vars
 from scripts.encryption import Encryption
 from tkinter import *
 from tkinter import _setit as tkinter_set_it
+from colorama import Style, Fore
 import threading
 import time
 import os
@@ -327,7 +328,7 @@ class Interface:
                     Vars.products[product]['encrypted_line'] = encrypted_message
                     f.write(f"{encrypted_message}\n")
                 else:
-                    f.write(f"{product['encrypted_line']}\n")
+                    f.write(f"{Vars.products[product]['encrypted_line']}\n")
 
     def update_trades() -> None:
         with open("trades.txt", "w") as f:
@@ -343,5 +344,7 @@ class Interface:
                     encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
                     Vars.trades[index]['encrypted_line'] = encrypted_message
                     f.write(f"{encrypted_message}\n")
+                    print(f"{encrypted_message}\n")
                 else:
                     f.write(f"{trade['encrypted_line']}\n")
+                    print(f"{trade['encrypted_line']}\n")
