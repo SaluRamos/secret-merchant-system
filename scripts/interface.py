@@ -1,5 +1,6 @@
 from scripts.variables import Vars
 from scripts.encryption import Encryption
+import matplotlib.pyplot as plt
 from tkinter import *
 from tkinter import _setit as tkinter_set_it
 import threading
@@ -254,6 +255,10 @@ class Interface:
         self.main_menu.profit_last30days.place(x = 715, y = 90)
         self.main_menu.profit_last60days = Label(self.main_root, text = "", font = self.interface_font1)
         self.main_menu.profit_last60days.place(x = 715, y = 110)
+        self.main_menu.search_button = Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.interface_font2, command = lambda *args : Interface.save_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
+        self.main_menu.search_button.place(x = 715, y = 130, width = 235, height = 25)
+        self.main_menu.search_button = Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.interface_font2, command = lambda *args : Interface.save_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
+        self.main_menu.search_button.place(x = 715, y = 160, width = 235, height = 25)
         Interface.update_profit(self)
         #product search
         self.main_menu.search_summary1 = Label(self.main_root, text = "NOME", font = self.interface_font1)
@@ -275,6 +280,16 @@ class Interface:
         #main_loop thread and tkinter loop
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
+
+    def save_matplot_pie_chart(info: dict, picture_name: str) -> None:
+        labels = info.keys()
+        sizes = []
+        for i in info.keys():
+            sizes.append(info[i])
+        fig1, ax1 = plt.subplots()
+        ax1.pie(sizes, labels = labels, autopct = '%1.1f%%', shadow = False, startangle = 90)
+        ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        plt.savefig(f"{picture_name}.png")
 
     def on_scroll_products(self, *args):
         self.main_menu.products_names.yview(*args)
