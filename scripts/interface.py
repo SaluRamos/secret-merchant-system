@@ -113,8 +113,8 @@ class Interface:
         self.main_menu.trade_input8.place(x = 220, y = 475, width = 150, height = 25)
         self.main_menu.trade_finish = Button(self.main_root, text = "FINALIZAR TRANSAÇÃO", font = self.interface_font3, command = lambda *args : Interface.trade_button(self))
         self.main_menu.trade_finish.place(x = 10, y = 500, width = 360, height = 25)
-        self.main_menu.trade_error = Label(self.main_root, text = "ERRO", font = self.interface_font1)
-        self.main_menu.trade_error.place(x = 10, y = 530, width = 360)
+        self.main_menu.trade_error = Label(self.main_root, text = "...", font = self.interface_font3, fg = "red")
+        self.main_menu.trade_error.place(x = 10, y = 525, width = 360)
         #new/update product interface
         self.main_menu.newproduct_summary1 = Label(self.main_root, text = "NOME", font = self.interface_font1)
         self.main_menu.newproduct_summary1.place(x = 380, y = 300)
@@ -191,7 +191,7 @@ class Interface:
         self.main_menu.profit_last28days.place(x = 715, y = 90)
         Interface.update_profit(self)
         self.main_menu.sleeping_time = Label(self.main_root, text = "sleeping time: ...", font = self.interface_font1)
-        self.main_menu.sleeping_time.place(x = 715, y = 510)
+        self.main_menu.sleeping_time.place(x = 715, y = 540)
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
 
@@ -269,16 +269,24 @@ class Interface:
                 transaction_date = self.main_menu.trade_input8.get().lower()
                 trade_year = transaction_date.split("/")[2]
                 if len(transaction_date.split("/")) != 3 or len(trade_year) == 1 or len(trade_year) == 3:
-                    print("wrong date")
-                    raise Exception("bad_date")
+                    raise Exception("BAD_DATE")
             if quantity <= Vars.products[product_name]['stock']:
                 Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
                 Interface.update_trades_table(self)
                 Vars.products[product_name]['stock'] -= quantity
                 Interface.update_product_table(self)
+            else:
+                raise Exception("NO_STOCK")
             Interface.update_profit(self)
-        except:
-            pass
+        except Exception as e:
+            if "could not convert string to float" in str(e):
+                self.main_menu.trade_error['text'] = "SOME FLOAT ENTRY CANNOT\n BE CONVERTED TO FLOAT"
+            elif "list index out of range" in str(e) or str(e) == "BAD_DATE":
+                self.main_menu.trade_error['text'] = "WRONG DATE"
+            elif str(e) == "NO_STOCK":
+                self.main_menu.trade_error['text'] = "INSSUFICIENT STOCK FOR THIS PRODUCT"
+            else:
+                print(str(e))
 
     def product_button(self) -> None:
         Vars.sleeping_time = 0
