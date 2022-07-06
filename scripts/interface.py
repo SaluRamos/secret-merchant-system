@@ -36,6 +36,7 @@ class Interface:
         trade_timestamp = trade_dt.replace(tzinfo = datetime.timezone.utc).timestamp()
         return trade_timestamp
 
+    #return profit from all trades since 'max_days'
     def profit_last_days(max_days: int) -> float:
         profit = 0
         atual_timestamp = time.time()
@@ -46,6 +47,7 @@ class Interface:
                 profit += i['profit']
         return round(profit, 2)
 
+    #return specific product info since 'date'
     def get_product_info(product_name: str, from_date: str) -> dict:
         profit = 0
         sold_quantity = 0
@@ -79,8 +81,8 @@ class Interface:
     def update_profit(self) -> None:
         self.main_menu.profit_last7days['text'] = f"lucro últimos 7 dias: {Interface.profit_last_days(7)}"
         self.main_menu.profit_last14days['text'] = f"lucro últimos 14 dias: {Interface.profit_last_days(14)}"
-        self.main_menu.profit_last21days['text'] = f"lucro últimos 21 dias: {Interface.profit_last_days(21)}"
-        self.main_menu.profit_last28days['text'] = f"lucro últimos 28 dias: {Interface.profit_last_days(28)}"
+        self.main_menu.profit_last30days['text'] = f"lucro últimos 30 dias: {Interface.profit_last_days(30)}"
+        self.main_menu.profit_last60days['text'] = f"lucro últimos 60 dias: {Interface.profit_last_days(60)}"
 
     def create_window(self) -> None:
         self.main_root.resizable(False, False)
@@ -88,9 +90,8 @@ class Interface:
         self.main_root.config(menu = self.main_menu)
         # self.main_root.iconbitmap(r"images/icon.ico")
         self.main_root.title("SECRET MERCHANT SYSTEM")
-        self.interface_font1 = ("Arial", "10")
-        self.interface_font2 = ("Arial", "9")
-        self.interface_font3 = ("Arial", "10", "bold")
+        self.interface_font1 = ("Arial", "9")
+        self.interface_font2 = ("Arial", "10", "bold")
         #new trade interface
         self.main_menu.trade_summary1 = Label(self.main_root, text = "PRODUTO", font = self.interface_font1)
         self.main_menu.trade_summary1.place(x = 10, y = 300)
@@ -137,11 +138,11 @@ class Interface:
         self.main_menu.trade_summary8.place(x = 10, y = 475)
         self.main_menu.trade_input8 = Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
         self.main_menu.trade_input8.place(x = 220, y = 475, width = 150, height = 25)
-        self.main_menu.trade_finish = Button(self.main_root, text = "FINALIZAR TRANSAÇÃO", font = self.interface_font3, command = lambda *args : Interface.trade_button(self))
+        self.main_menu.trade_finish = Button(self.main_root, text = "FINALIZAR TRANSAÇÃO", font = self.interface_font2, command = lambda *args : Interface.trade_button(self))
         self.main_menu.trade_finish.place(x = 10, y = 500, width = 360, height = 25)
-        self.main_menu.trade_error = Label(self.main_root, text = "teste\nteste", font = self.interface_font3, fg = "red", bg = "cyan")
+        self.main_menu.trade_error = Label(self.main_root, text = "teste\nteste", font = self.interface_font2, fg = "red", bg = "cyan")
         self.main_menu.trade_error.place(x = 10, y = 530, width = 360)
-        self.main_menu.trade_remove = Button(self.main_root, text = "REMOVER ÚLTIMA TRANSAÇÃO", font = self.interface_font3, command = lambda *args : Interface.remove_last_trade(self))
+        self.main_menu.trade_remove = Button(self.main_root, text = "REMOVER ÚLTIMA TRANSAÇÃO", font = self.interface_font2, command = lambda *args : Interface.remove_last_trade(self))
         self.main_menu.trade_remove.place(x = 10, y = 570, width = 360, height = 25)
         #new/update product interface
         self.main_menu.newproduct_summary1 = Label(self.main_root, text = "NOME", font = self.interface_font1)
@@ -152,11 +153,11 @@ class Interface:
         self.main_menu.newproduct_summary2.place(x = 380, y = 325)
         self.main_menu.newproduct_input2 = Entry(self.main_root, font = self.interface_font1, justify = "center")
         self.main_menu.newproduct_input2.place(x = 530, y = 325, width = 160, height = 25)
-        self.main_menu.newproduct_summary3 = Label(self.main_root, text = "STOCK", font = self.interface_font1)
+        self.main_menu.newproduct_summary3 = Label(self.main_root, text = "STOCK (USE '+' OR '-' !)", font = self.interface_font1)
         self.main_menu.newproduct_summary3.place(x = 380, y = 350)
         self.main_menu.newproduct_input3 = Entry(self.main_root, font = self.interface_font1, justify = "center")
         self.main_menu.newproduct_input3.place(x = 530, y = 350, width = 160, height = 25)
-        self.main_menu.newproduct_finish = Button(self.main_root, text = "ADICIONAR / ATUALIZAR PRODUTO", font = self.interface_font3, command = lambda *args : Interface.product_button(self))
+        self.main_menu.newproduct_finish = Button(self.main_root, text = "ADICIONAR / ATUALIZAR PRODUTO", font = self.interface_font2, command = lambda *args : Interface.product_button(self))
         self.main_menu.newproduct_finish.place(x = 380, y = 375, width = 310, height = 25)
         self.main_menu.products_summary1 = Label(self.main_root, text = "NOME", font = self.interface_font1)
         self.main_menu.products_summary1.place(x = 380, y = 400)
@@ -166,11 +167,11 @@ class Interface:
         self.main_menu.products_summary1.place(x = 640, y = 400)
         self.main_menu.products_scrollbar = Scrollbar(orient = "vertical", command = self.on_scroll_products)
         self.main_menu.products_scrollbar.place(x = 695, y = 300, width = 15, height = 293)
-        self.main_menu.products_names = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
+        self.main_menu.products_names = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
         self.main_menu.products_names.place(x = 380, y = 420, width = 210, height = 175)
-        self.main_menu.products_buyprice = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
+        self.main_menu.products_buyprice = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
         self.main_menu.products_buyprice.place(x = 590, y = 420, width = 50, height = 175)
-        self.main_menu.products_stock = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
+        self.main_menu.products_stock = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
         self.main_menu.products_stock.place(x = 640, y = 420, width = 50, height = 175)
         Interface.update_product_table(self)
         #db trades interface
@@ -192,31 +193,31 @@ class Interface:
         self.main_menu.trade_summary7.place(x = 510, y = 10)
         self.main_menu.trade_summary8 = Label(self.main_root, text = "DATA", font = self.interface_font1)
         self.main_menu.trade_summary8.place(x = 560, y = 10)
-        self.main_menu.trade_names = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_names = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_names.place(x = 10, y = 30, width = 150, height = 265)
-        self.main_menu.trade_quantity = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_quantity = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_quantity.place(x = 160, y = 30, width = 50, height = 265)
-        self.main_menu.trade_sellprice = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_sellprice = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_sellprice.place(x = 210, y = 30, width = 50, height = 265)
-        self.main_menu.trade_method = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_method = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_method.place(x = 260, y = 30, width = 100, height = 265)
-        self.main_menu.trade_buyer = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_buyer = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_buyer.place(x = 360, y = 30, width = 100, height = 265)
-        self.main_menu.trade_cost = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_cost = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_cost.place(x = 460, y = 30, width = 50, height = 265)
-        self.main_menu.trade_profit = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_profit = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_profit.place(x = 510, y = 30, width = 50, height = 265)
-        self.main_menu.trade_date = Listbox(self.main_root, font = self.interface_font2, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_date = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_date.place(x = 560, y = 30, width = 130, height = 265)
         Interface.update_trades_table(self)
         self.main_menu.profit_last7days = Label(self.main_root, text = "", font = self.interface_font1)
         self.main_menu.profit_last7days.place(x = 715, y = 30)
         self.main_menu.profit_last14days = Label(self.main_root, text = "", font = self.interface_font1)
         self.main_menu.profit_last14days.place(x = 715, y = 50)
-        self.main_menu.profit_last21days = Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last21days.place(x = 715, y = 70)
-        self.main_menu.profit_last28days = Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last28days.place(x = 715, y = 90)
+        self.main_menu.profit_last30days = Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last30days.place(x = 715, y = 70)
+        self.main_menu.profit_last60days = Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last60days.place(x = 715, y = 90)
         Interface.update_profit(self)
         self.main_menu.sleeping_time = Label(self.main_root, text = "sleeping time: ...", font = self.interface_font1)
         self.main_menu.sleeping_time.place(x = 715, y = 575)
@@ -331,10 +332,18 @@ class Interface:
         try:
             product_name = self.main_menu.newproduct_input1.get().lower()
             buy_price = float(self.main_menu.newproduct_input2.get())
-            stock = float(self.main_menu.newproduct_input3.get())
-            Vars.products[product_name] = {'buy_price':buy_price, 'stock':stock}
+            stock = self.main_menu.newproduct_input3.get()
+            if "+" in stock:
+                stock = Vars.products[product_name]['stock'] + float(stock)
+                Vars.products[product_name] = {'buy_price':buy_price, 'stock':stock}
+            elif "-" in stock:
+                stock = Vars.products[product_name]['stock'] - abs(float(stock))
+                Vars.products[product_name] = {'buy_price':buy_price, 'stock':stock}
+            else:
+                Vars.products[product_name] = {'buy_price':buy_price, 'stock':float(stock)}
             Interface.update_product_table(self)
-        except:
+        except Exception as e:
+            print(str(e))
             pass
 
     def update_products() -> None:

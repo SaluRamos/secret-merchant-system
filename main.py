@@ -7,6 +7,7 @@ from scripts.general import General
 if __name__ == "__main__":
     os.system("clear")
     Vars.encryption_key = General.get_password("type password key: ")
+    print()
     try:
         Vars.load_products()
         Vars.load_trades()
