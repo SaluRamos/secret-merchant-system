@@ -2,7 +2,6 @@ from scripts.variables import Vars
 from scripts.encryption import Encryption
 from tkinter import *
 from tkinter import _setit as tkinter_set_it
-# from colorama import Style, Fore
 import threading
 import time
 import os
