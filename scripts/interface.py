@@ -114,7 +114,7 @@ class Interface:
         self.main_menu.trade_finish = Button(self.main_root, text = "FINALIZAR TRANSAÇÃO", font = self.interface_font3, command = lambda *args : Interface.trade_button(self))
         self.main_menu.trade_finish.place(x = 10, y = 500, width = 360, height = 25)
         self.main_menu.trade_error = Label(self.main_root, text = "teste\nteste", font = self.interface_font3, fg = "red", bg = "cyan")
-        self.main_menu.trade_error.place(x = 10, y = 535, width = 360)
+        self.main_menu.trade_error.place(x = 10, y = 530, width = 360)
         self.main_menu.trade_remove = Button(self.main_root, text = "REMOVER ÚLTIMA TRANSAÇÃO", font = self.interface_font3, command = lambda *args : Interface.remove_last_trade(self))
         self.main_menu.trade_remove.place(x = 10, y = 570, width = 360, height = 25)
         #new/update product interface
@@ -321,18 +321,27 @@ class Interface:
             pass
         with open("products.txt", "a") as f:
             for product in Vars.products.keys():
-                message = f"{product},{Vars.products[product]['buy_price']},{Vars.products[product]['stock']}"
-                encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
-                f.write(f"{encrypted_message}\n")
+                if "encrypted_line" not in Vars.products[product].keys():
+                    message = f"{product},{Vars.products[product]['buy_price']},{Vars.products[product]['stock']}"
+                    encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
+                    Vars.products[product]['encrypted_line'] = encrypted_message
+                    f.write(f"{encrypted_message}\n")
+                else:
+                    f.write(f"{product['encrypted_line']}\n")
 
     def update_trades() -> None:
         with open("trades.txt", "w") as f:
             pass
         with open("trades.txt", "a") as f:
-            for trade in Vars.trades:
-                message = ""
-                for key in trade.keys():
-                    message = f"{message}{trade[key]},"
-                message = message[0:len(message)-1]
-                encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
-                f.write(f"{encrypted_message}\n")
+            for index, trade in enumerate(Vars.trades):
+                if "encrypted_line" not in trade.keys():
+                    message = ""
+                    for key in trade.keys():
+                        if key != "encrypted_line":
+                            message = f"{message}{trade[key]},"
+                    message = message[0:len(message)-1]
+                    encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
+                    Vars.trades[index]['encrypted_line'] = encrypted_message
+                    f.write(f"{encrypted_message}\n")
+                else:
+                    f.write(f"{trade['encrypted_line']}\n")

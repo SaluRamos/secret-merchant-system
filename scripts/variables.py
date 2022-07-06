@@ -18,8 +18,9 @@ class Vars:
                 pass
         with open("products.txt", "r") as f:
             for line in f.readlines():
+                encrypted_line = line
                 line = Encryption.password_decrypt(line, Vars.encryption_key)
-                Vars.products[line.split(",")[0]] = {'buy_price':float(line.split(",")[1]), 'stock':float(line.split(",")[2])}
+                Vars.products[line.split(",")[0]] = {'buy_price':float(line.split(",")[1]), 'stock':float(line.split(",")[2]), 'encrypted_line':encrypted_line}
 
     def load_trades() -> None:
         if os.path.exists("trades.txt") == False:
@@ -27,5 +28,6 @@ class Vars:
                 pass
         with open("trades.txt", "r") as f:
             for line in f.readlines():
+                encrypted_line = line
                 line = Encryption.password_decrypt(line, Vars.encryption_key)
-                Vars.trades.append({'product':line.split(",")[0], 'quantity':float(line.split(",")[1]), 'sell_price':float(line.split(",")[2]), 'payment_method':line.split(",")[3], 'buyer_name':line.split(",")[4], 'total_cost':float(line.split(",")[5]), 'profit':float(line.split(",")[6]), 'transaction_date':line.split(",")[7]})
+                Vars.trades.append({'product':line.split(",")[0], 'quantity':float(line.split(",")[1]), 'sell_price':float(line.split(",")[2]), 'payment_method':line.split(",")[3], 'buyer_name':line.split(",")[4], 'total_cost':float(line.split(",")[5]), 'profit':float(line.split(",")[6]), 'transaction_date':line.split(",")[7], 'encrypted_line':encrypted_line})
