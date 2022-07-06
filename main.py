@@ -12,7 +12,7 @@ if __name__ == "__main__":
         Vars.load_products()
         Vars.load_trades()
     except:
-        print("different password!")
+        print("different password!         ")
         sure = input("are you sure (y/n)? ")
         if sure.lower() == "y":
             pass
@@ -21,5 +21,4 @@ if __name__ == "__main__":
     os.system("clear")
     if Vars.products == {} and Vars.trades == []:
         print("THIS WILL BE YOUR NEW PASSWORD! REMEMBER IT!")
-    # print(Interface.get_product_info("cogumelo", "16/06/22"))
     Interface().create_window()

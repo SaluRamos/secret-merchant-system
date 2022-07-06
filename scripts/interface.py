@@ -160,20 +160,22 @@ class Interface:
         self.main_menu.newproduct_input3.place(x = 530, y = 350, width = 160, height = 25)
         self.main_menu.newproduct_finish = Button(self.main_root, text = "ADICIONAR / ATUALIZAR PRODUTO", font = self.interface_font2, command = lambda *args : Interface.product_button(self))
         self.main_menu.newproduct_finish.place(x = 380, y = 375, width = 310, height = 25)
+        self.main_menu.newproduct_finish = Button(self.main_root, text = "REMOVER PRODUTO POR NOME", font = self.interface_font2, command = lambda *args : Interface.remove_product(self))
+        self.main_menu.newproduct_finish.place(x = 380, y = 405, width = 310, height = 25)
         self.main_menu.products_summary1 = Label(self.main_root, text = "NOME", font = self.interface_font1)
-        self.main_menu.products_summary1.place(x = 380, y = 400)
+        self.main_menu.products_summary1.place(x = 380, y = 430)
         self.main_menu.products_summary1 = Label(self.main_root, text = "CUSTO", font = self.interface_font1)
-        self.main_menu.products_summary1.place(x = 590, y = 400)
+        self.main_menu.products_summary1.place(x = 590, y = 430)
         self.main_menu.products_summary1 = Label(self.main_root, text = "STOCK", font = self.interface_font1)
-        self.main_menu.products_summary1.place(x = 640, y = 400)
+        self.main_menu.products_summary1.place(x = 640, y = 430)
         self.main_menu.products_scrollbar = Scrollbar(orient = "vertical", command = self.on_scroll_products)
         self.main_menu.products_scrollbar.place(x = 695, y = 300, width = 15, height = 293)
         self.main_menu.products_names = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
-        self.main_menu.products_names.place(x = 380, y = 420, width = 210, height = 175)
+        self.main_menu.products_names.place(x = 380, y = 450, width = 210, height = 145)
         self.main_menu.products_buyprice = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
-        self.main_menu.products_buyprice.place(x = 590, y = 420, width = 50, height = 175)
+        self.main_menu.products_buyprice.place(x = 590, y = 450, width = 50, height = 145)
         self.main_menu.products_stock = Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
-        self.main_menu.products_stock.place(x = 640, y = 420, width = 50, height = 175)
+        self.main_menu.products_stock.place(x = 640, y = 450, width = 50, height = 145)
         Interface.update_product_table(self)
         #db trades interface
         self.main_menu.trade_scrollbar = Scrollbar(orient = "vertical", command = self.on_scroll_trades)
@@ -284,6 +286,7 @@ class Interface:
         self.main_menu.trade_date.delete(0, END)
 
     def remove_last_trade(self) -> None:
+        Vars.sleeping_time = 0
         last_trade = Vars.trades[-1]
         Vars.products[last_trade['product']]['stock'] += last_trade['quantity']
         Vars.trades.pop()
@@ -291,7 +294,10 @@ class Interface:
         Interface.update_product_table(self)
 
     def remove_product(self) -> None:
-        pass
+        Vars.sleeping_time = 0
+        product_name = self.main_menu.newproduct_input1.get().lower()
+        del Vars.products[product_name]
+        Interface.update_product_table(self)
 
     def trade_button(self) -> None:
         Vars.sleeping_time = 0
@@ -349,8 +355,7 @@ class Interface:
             else:
                 Vars.products[product_name] = {'buy_price':buy_price, 'stock':float(stock)}
             Interface.update_product_table(self)
-        except Exception as e:
-            print(str(e))
+        except:
             pass
 
     def update_products() -> None:
