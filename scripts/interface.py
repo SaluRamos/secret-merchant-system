@@ -268,7 +268,10 @@ class Interface:
             else:
                 transaction_date = self.main_menu.trade_input8.get().lower()
                 trade_year = transaction_date.split("/")[2]
-                if len(transaction_date.split("/")) != 3 or len(trade_year) == 1 or len(trade_year) == 3:
+                trade_day = transaction_date.split("/")[0]
+                year_verification = int(trade_year)
+                day_verification = int(trade_day)
+                if len(transaction_date.split("/")) != 3 or len(trade_year) == 1 or len(trade_year) == 3 or len(trade_day) > 2:
                     raise Exception("BAD_DATE")
             if quantity <= Vars.products[product_name]['stock']:
                 Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
