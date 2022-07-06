@@ -78,6 +78,7 @@ class Interface:
             if Vars.sleeping_time >= Vars.max_sleep_time:
                 os._exit(0)
 
+    #update interface profit info
     def update_profit(self) -> None:
         self.main_menu.profit_last7days['text'] = f"lucro últimos 7 dias: {Interface.profit_last_days(7)}"
         self.main_menu.profit_last14days['text'] = f"lucro últimos 14 dias: {Interface.profit_last_days(14)}"
@@ -140,7 +141,7 @@ class Interface:
         self.main_menu.trade_input8.place(x = 220, y = 475, width = 150, height = 25)
         self.main_menu.trade_finish = Button(self.main_root, text = "FINALIZAR TRANSAÇÃO", font = self.interface_font2, command = lambda *args : Interface.trade_button(self))
         self.main_menu.trade_finish.place(x = 10, y = 500, width = 360, height = 25)
-        self.main_menu.trade_error = Label(self.main_root, text = "teste\nteste", font = self.interface_font2, fg = "red", bg = "cyan")
+        self.main_menu.trade_error = Label(self.main_root, text = "teste", font = self.interface_font2, fg = "red", bg = "cyan")
         self.main_menu.trade_error.place(x = 10, y = 530, width = 360)
         self.main_menu.trade_remove = Button(self.main_root, text = "REMOVER ÚLTIMA TRANSAÇÃO", font = self.interface_font2, command = lambda *args : Interface.remove_last_trade(self))
         self.main_menu.trade_remove.place(x = 10, y = 570, width = 360, height = 25)
@@ -283,8 +284,14 @@ class Interface:
         self.main_menu.trade_date.delete(0, END)
 
     def remove_last_trade(self) -> None:
+        last_trade = Vars.trades[-1]
+        Vars.products[last_trade['product']]['stock'] += last_trade['quantity']
         Vars.trades.pop()
         Interface.update_trades_table(self)
+        Interface.update_product_table(self)
+
+    def remove_product(self) -> None:
+        pass
 
     def trade_button(self) -> None:
         Vars.sleeping_time = 0
