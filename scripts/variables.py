@@ -1,4 +1,3 @@
-from scripts.general import General
 import os
 from scripts.encryption import Encryption
 
