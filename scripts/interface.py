@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import _setit as tkinter_set_it
 from matplotlib import pyplot as plt
 from PIL import Image
+import numpy
 import threading
 import time
 import os
@@ -78,11 +79,15 @@ class Interface:
         quantitys = {}
         for trade in Vars.trades:
             if trade['profit'] > 0:
-                if f"{trade['product']} {trade['quantity']}" not in quantitys.keys():
-                    quantitys[f"{trade['product']} {trade['quantity']}"] = 1
+                if f"{trade['product']}, qtd:{trade['quantity']}" not in quantitys.keys():
+                    quantitys[f"{trade['product']}, qtd:{trade['quantity']}"] = 1
                 else:
-                    quantitys[f"{trade['product']} {trade['quantity']}"] += 1
-        return quantitys
+                    quantitys[f"{trade['product']}, qtd:{trade['quantity']}"] += 1
+        valid_quantitys = {}
+        for product in quantitys.keys():
+            if quantitys[product] >= Vars.min_insight_valid_qtd_qtd:
+                valid_quantitys[product] = quantitys[product]
+        return valid_quantitys
 
     def rename_trades_product_name(self, from_names: list, to_name: str) -> None:
         trades_copy = Vars.trades.copy()
@@ -284,18 +289,18 @@ class Interface:
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
 
-    def save_matplot_pie_chart(info: dict, picture_name: str, autoclose: bool = False) -> None:
+    def save_matplot_pie_chart(info: dict, picture_name: str) -> None:
         labels = list(info.keys())
         sizes = []
         for i in info.keys():
             sizes.append(info[i])
-        # fig1, ax1 = plt.subplots()
-        plt.pie(sizes, labels = labels, autopct = "%1.1f%%", shadow = False, startangle = 90)
+        p, tx, autotexts = plt.pie(sizes, labels = labels, autopct = "", shadow = False)
+        for i, a in enumerate(autotexts):
+            a.set_text(f"{sizes[i]}")
         plt.axis("equal")
         plt.savefig(f"{picture_name}.png")
         plt.close()
         Image.open(fr"{picture_name}.png").show()
-        # time.sleep(2)
         os.remove(f"{picture_name}.png")
 
     def on_scroll_products(self, *args):
