@@ -117,6 +117,7 @@ class Interface:
 
     #update interface profit info
     def update_profit(self) -> None:
+        self.main_menu.profit_last24hours['text'] = f"lucro últimas 24 horas: {Interface.profit_last_days(1)}"
         self.main_menu.profit_last7days['text'] = f"lucro últimos 7 dias: {Interface.profit_last_days(7)}"
         self.main_menu.profit_last14days['text'] = f"lucro últimos 14 dias: {Interface.profit_last_days(14)}"
         self.main_menu.profit_last30days['text'] = f"lucro últimos 30 dias: {Interface.profit_last_days(30)}"
@@ -254,37 +255,39 @@ class Interface:
         #info
         self.main_menu.sleeping_time = tk.Label(self.main_root, text = "sleeping time: ...", font = self.interface_font1)
         self.main_menu.sleeping_time.place(x = 715, y = 30)
+        self.main_menu.profit_last24hours = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last24hours.place(x = 715, y = 50)
         self.main_menu.profit_last7days = tk.Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last7days.place(x = 715, y = 50)
+        self.main_menu.profit_last7days.place(x = 715, y = 70)
         self.main_menu.profit_last14days = tk.Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last14days.place(x = 715, y = 70)
+        self.main_menu.profit_last14days.place(x = 715, y = 90)
         self.main_menu.profit_last30days = tk.Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last30days.place(x = 715, y = 90)
+        self.main_menu.profit_last30days.place(x = 715, y = 110)
         self.main_menu.profit_last60days = tk.Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last60days.place(x = 715, y = 110)
+        self.main_menu.profit_last60days.place(x = 715, y = 130)
         #insights
         self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.interface_font2, command = lambda *args : Interface.save_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
-        self.main_menu.search_button.place(x = 715, y = 130, width = 235, height = 25)
+        self.main_menu.search_button.place(x = 715, y = 150, width = 235, height = 25)
         self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.interface_font2, command = lambda *args : Interface.save_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
-        self.main_menu.search_button.place(x = 715, y = 160, width = 235, height = 25)
+        self.main_menu.search_button.place(x = 715, y = 180, width = 235, height = 25)
         Interface.update_profit(self)
         #search
         self.main_menu.search_summary1 = tk.Label(self.main_root, text = "NOME", font = self.interface_font1)
-        self.main_menu.search_summary1.place(x = 715, y = 198)
+        self.main_menu.search_summary1.place(x = 715, y = 218)
         self.main_menu.search_name = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
-        self.main_menu.search_name.place(x = 850, y = 195, width = 100, height = 25)
+        self.main_menu.search_name.place(x = 850, y = 215, width = 100, height = 25)
         self.main_menu.search_summary2 = tk.Label(self.main_root, text = "DESDE (DIA/MÊS/ANO)", font = self.interface_font1)
-        self.main_menu.search_summary2.place(x = 715, y = 228)
+        self.main_menu.search_summary2.place(x = 715, y = 248)
         self.main_menu.search_date = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
-        self.main_menu.search_date.place(x = 850, y = 225, width = 100, height = 25)
+        self.main_menu.search_date.place(x = 850, y = 245, width = 100, height = 25)
         self.main_menu.search_button = tk.Button(self.main_root, text = "PESQUISAR INFO DO PRODUTO", font = self.interface_font2, command = lambda *args : Interface.search_button(self))
-        self.main_menu.search_button.place(x = 715, y = 255, width = 235, height = 25)
+        self.main_menu.search_button.place(x = 715, y = 275, width = 235, height = 25)
         self.main_menu.search_result_profit = tk.Label(self.main_root, text = "LUCRO DO PRODUTO: ...", font = self.interface_font1)
-        self.main_menu.search_result_profit.place(x = 715, y = 285)
+        self.main_menu.search_result_profit.place(x = 715, y = 305)
         self.main_menu.search_result_totalbuyers = tk.Label(self.main_root, text = "TOTAL DE COMPRADORES: ...", font = self.interface_font1)
-        self.main_menu.search_result_totalbuyers.place(x = 715, y = 305)
+        self.main_menu.search_result_totalbuyers.place(x = 715, y = 325)
         self.main_menu.search_result_soldquantity = tk.Label(self.main_root, text = "TOTAL VENDIDO: ...", font = self.interface_font1)
-        self.main_menu.search_result_soldquantity.place(x = 715, y = 325)
+        self.main_menu.search_result_soldquantity.place(x = 715, y = 345)
         #main_loop thread and tkinter loop
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
@@ -324,8 +327,8 @@ class Interface:
         for product_name in Vars.products.keys():
             if Vars.products[product_name]['stock'] > 0:
                 self.main_menu.products_names.insert(0, product_name)
-                self.main_menu.products_buyprice.insert(0, Vars.products[product_name]['buy_price'])
-                self.main_menu.products_stock.insert(0, Vars.products[product_name]['stock'])
+                self.main_menu.products_buyprice.insert(0, round(Vars.products[product_name]['buy_price'], 2))
+                self.main_menu.products_stock.insert(0, round(Vars.products[product_name]['stock'], 2))
                 avaible_products.append(product_name)
         self.main_menu.trade_input1['menu'].delete(0, 'end')
         self.main_menu.trade_input1_variable.set("selecione")
