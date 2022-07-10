@@ -19,7 +19,6 @@ if __name__ == "__main__":
         else:
             os._exit(0)
     os.system("clear")
-    # Interface.save_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights", True)
     if Vars.products == {} and Vars.trades == []:
         print("THIS WILL BE YOUR NEW PASSWORD! REMEMBER IT!")
     Interface().create_window()

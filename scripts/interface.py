@@ -293,6 +293,7 @@ class Interface:
         self.main_root.mainloop()
 
     def save_matplot_pie_chart(info: dict, picture_name: str) -> None:
+        Vars.sleeping_time = 0
         labels = list(info.keys())
         sizes = []
         for i in info.keys():
@@ -343,8 +344,8 @@ class Interface:
 
     def update_trades_table(self) -> None:
         Interface.reset_trades_table(self)
-        for i in Vars.trades:
-            self.main_menu.trade_names.insert(0, i['product'])
+        for index, i in enumerate(Vars.trades):
+            self.main_menu.trade_names.insert(0, f"{index + 1} - {i['product']}")
             self.main_menu.trade_quantity.insert(0, i['quantity'])
             self.main_menu.trade_sellprice.insert(0, i['sell_price'])
             self.main_menu.trade_method.insert(0, i['payment_method'])
