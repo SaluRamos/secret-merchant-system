@@ -177,10 +177,14 @@ class Interface:
         self.main_menu.trade_summary8.place(x = 10, y = 478)
         self.main_menu.trade_input8 = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
         self.main_menu.trade_input8.place(x = 220, y = 475, width = 150, height = 25)
+        self.main_menu.trade_load = tk.Button(self.main_root, text = "CARREGAR TRANSAÇÃO COM INDEX", font = self.interface_font2, command = lambda *args : Interface.load_trade_info(self))
+        self.main_menu.trade_load.place(x = 10, y = 510, width = 300, height = 25)
+        self.main_menu.trade_load_index = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_load_index.place(x = 320, y = 510, width = 50, height = 25)
         self.main_menu.trade_finish = tk.Button(self.main_root, text = "ADD/UPD TRANSAÇÃO COM INDEX", font = self.interface_font2, command = lambda *args : Interface.trade_button(self))
-        self.main_menu.trade_finish.place(x = 10, y = 500, width = 300, height = 25)
+        self.main_menu.trade_finish.place(x = 10, y = 540, width = 300, height = 25)
         self.main_menu.trade_finish_index = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
-        self.main_menu.trade_finish_index.place(x = 320, y = 500, width = 50, height = 25)
+        self.main_menu.trade_finish_index.place(x = 320, y = 540, width = 50, height = 25)
         self.main_menu.trade_remove = tk.Button(self.main_root, text = "REMOVER TRANSAÇÃO COM INDEX", font = self.interface_font2, command = lambda *args : Interface.remove_a_trade(self))
         self.main_menu.trade_remove.place(x = 10, y = 570, width = 300, height = 25)
         self.main_menu.trade_remove_index = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
@@ -225,26 +229,26 @@ class Interface:
         self.main_menu.newproduct_summary1 = tk.Label(self.main_root, text = "NOME", font = self.interface_font1)
         self.main_menu.newproduct_summary1.place(x = 380, y = 303)
         self.main_menu.newproduct_input1 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
-        self.main_menu.newproduct_input1.place(x = 530, y = 300, width = 160, height = 25)
+        self.main_menu.newproduct_input1.place(x = 540, y = 300, width = 150, height = 25)
         self.main_menu.newproduct_summary2 = tk.Label(self.main_root, text = "PREÇO DE CUSTO", font = self.interface_font1)
         self.main_menu.newproduct_summary2.place(x = 380, y = 328)
         self.main_menu.newproduct_input2 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
-        self.main_menu.newproduct_input2.place(x = 530, y = 325, width = 160, height = 25)
-        self.main_menu.newproduct_summary3 = tk.Label(self.main_root, text = "STOCK (USE '+' OR '-' !)", font = self.interface_font1)
+        self.main_menu.newproduct_input2.place(x = 540, y = 325, width = 150, height = 25)
+        self.main_menu.newproduct_summary3 = tk.Label(self.main_root, text = "STOCK (TIP: USE  ' ± ' )", font = self.interface_font1)
         self.main_menu.newproduct_summary3.place(x = 380, y = 353)
         self.main_menu.newproduct_input3 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
-        self.main_menu.newproduct_input3.place(x = 530, y = 350, width = 160, height = 25)
-        self.main_menu.newproduct_finish = tk.Button(self.main_root, text = "ADICIONAR / ATUALIZAR PRODUTO", font = self.interface_font2, command = lambda *args : Interface.product_button(self))
-        self.main_menu.newproduct_finish.place(x = 380, y = 375, width = 310, height = 25)
-        self.main_menu.newproduct_finish = tk.Button(self.main_root, text = "REMOVER PRODUTO POR NOME", font = self.interface_font2, command = lambda *args : Interface.remove_product(self))
-        self.main_menu.newproduct_finish.place(x = 380, y = 405, width = 310, height = 25)
+        self.main_menu.newproduct_input3.place(x = 540, y = 350, width = 150, height = 25)
+        self.main_menu.newproduct_finish = tk.Button(self.main_root, text = "ADD/UPD PRODUTO", font = self.interface_font2, command = lambda *args : Interface.product_button(self))
+        self.main_menu.newproduct_finish.place(x = 380, y = 380, width = 310, height = 25)
+        self.main_menu.product_remove = tk.Button(self.main_root, text = "REMOVER PRODUTO POR NOME", font = self.interface_font2, command = lambda *args : Interface.remove_product(self))
+        self.main_menu.product_remove.place(x = 380, y = 410, width = 310, height = 25)
         #product interface
-        self.main_menu.products_summary1 = tk.Label(self.main_root, text = "NOME", font = self.interface_font1)
-        self.main_menu.products_summary1.place(x = 380, y = 435)
-        self.main_menu.products_summary1 = tk.Label(self.main_root, text = "CUSTO", font = self.interface_font1)
-        self.main_menu.products_summary1.place(x = 590, y = 435)
-        self.main_menu.products_summary1 = tk.Label(self.main_root, text = "STOCK", font = self.interface_font1)
-        self.main_menu.products_summary1.place(x = 640, y = 435)
+        self.main_menu.products_summary1 = tk.Label(self.main_root, text = "NOME", font = self.interface_font1, justify = "center")
+        self.main_menu.products_summary1.place(x = 380, y = 435, width = 210)
+        self.main_menu.products_summary2 = tk.Label(self.main_root, text = "CUSTO", font = self.interface_font1, justify = "center")
+        self.main_menu.products_summary2.place(x = 590, y = 435, width = 50)
+        self.main_menu.products_summary3 = tk.Label(self.main_root, text = "STOCK", font = self.interface_font1, justify = "center")
+        self.main_menu.products_summary3.place(x = 640, y = 435, width = 50)
         self.main_menu.products_scrollbar = tk.Scrollbar(orient = "vertical", command = self.on_scroll_products)
         self.main_menu.products_scrollbar.place(x = 695, y = 300, width = 15, height = 293)
         self.main_menu.products_names = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
@@ -268,9 +272,9 @@ class Interface:
         self.main_menu.profit_last60days = tk.Label(self.main_root, text = "", font = self.interface_font1)
         self.main_menu.profit_last60days.place(x = 715, y = 130)
         #insights
-        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.interface_font2, command = lambda *args : Interface.save_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
+        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
         self.main_menu.search_button.place(x = 715, y = 150, width = 235, height = 25)
-        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.interface_font2, command = lambda *args : Interface.save_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
+        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
         self.main_menu.search_button.place(x = 715, y = 180, width = 235, height = 25)
         Interface.update_profit(self)
         #search
@@ -294,7 +298,7 @@ class Interface:
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
 
-    def save_matplot_pie_chart(info: dict, picture_name: str) -> None:
+    def show_temp_matplot_pie_chart(info: dict, picture_name: str) -> None:
         Vars.sleeping_time = 0
         labels = list(info.keys())
         sizes = []
@@ -309,11 +313,13 @@ class Interface:
         Image.open(fr"{picture_name}.png").show()
         os.remove(f"{picture_name}.png")
 
+    #gerencia scroll da tabela de produtos
     def on_scroll_products(self, *args):
         self.main_menu.products_names.yview(*args)
         self.main_menu.products_buyprice.yview(*args)
         self.main_menu.products_stock.yview(*args)
 
+    #gerencia scroll da tabela de transações
     def on_scroll_trades(self, *args):
         self.main_menu.trade_names.yview(*args)
         self.main_menu.trade_quantity.yview(*args)
@@ -324,6 +330,7 @@ class Interface:
         self.main_menu.trade_profit.yview(*args)
         self.main_menu.trade_date.yview(*args)
 
+    #atualiza tabela de produtos
     def update_product_table(self) -> None:
         Interface.reset_product_table(self)
         avaible_products = []
@@ -339,11 +346,13 @@ class Interface:
             self.main_menu.trade_input1['menu'].add_command(label = i, command = tkinter_set_it(self.main_menu.trade_input1_variable, i))
         Interface.update_products()
 
+    #limpa a tabela de produtos
     def reset_product_table(self) -> None:
         self.main_menu.products_names.delete(0, tk.END)
         self.main_menu.products_buyprice.delete(0, tk.END)
         self.main_menu.products_stock.delete(0, tk.END)
 
+    #atualiza a tabela de transações
     def update_trades_table(self) -> None:
         Interface.reset_trades_table(self)
         for index, i in enumerate(Vars.trades):
@@ -357,6 +366,7 @@ class Interface:
             self.main_menu.trade_date.insert(0, i['transaction_date'])
         Interface.update_trades()
 
+    #limpa a tabela de transações
     def reset_trades_table(self) -> None:
         self.main_menu.trade_names.delete(0, tk.END)
         self.main_menu.trade_quantity.delete(0, tk.END)
@@ -367,10 +377,13 @@ class Interface:
         self.main_menu.trade_profit.delete(0, tk.END)
         self.main_menu.trade_date.delete(0, tk.END)
 
+    #ação do botão de remover transação
     def remove_a_trade(self) -> None:
         Vars.sleeping_time = 0
         try:
-            trade_index = int(self.main_menu.trade_remove_index.get()) - 1
+            trade_index = abs(int(self.main_menu.trade_remove_index.get())) - 1
+            if (trade_index + 1) > len(Vars.trades):
+                raise Exception("INVALID_INDEX")
         except:
             return
         trade_product = Vars.trades[trade_index]['product']
@@ -380,12 +393,14 @@ class Interface:
         Interface.update_trades_table(self)
         Interface.update_product_table(self)
 
+    #ação do botão de remover produto
     def remove_product(self) -> None:
         Vars.sleeping_time = 0
         product_name = self.main_menu.newproduct_input1.get().lower()
         del Vars.products[product_name]
         Interface.update_product_table(self)
 
+    #ação do botão de add/upd transação
     def trade_button(self) -> None:
         Vars.sleeping_time = 0
         try:
@@ -402,9 +417,39 @@ class Interface:
                 transaction_date = self.main_menu.trade_input8.get()
                 Interface.verify_date(transaction_date)
             if quantity <= Vars.products[product_name]['stock']:
-                Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
-                Interface.update_trades_table(self)
+                update_index = self.main_menu.trade_finish_index.get()
+                if update_index == "":
+                    new_trade = {}
+                    new_trade['product'] = product_name
+                    new_trade['quantity'] = quantity
+                    new_trade['sell_price'] = sell_price
+                    new_trade['payment_method'] = payment_method
+                    new_trade['buyer_name'] = buyer_name
+                    new_trade['total_cost'] = total_cost
+                    new_trade['profit'] = profit
+                    new_trade['transaction_date'] = transaction_date
+                    Vars.trades.append(new_trade)
+                else:
+                    try:
+                        update_index = abs(int(update_index)) - 1
+                        if (update_index + 1) > len(Vars.trades):
+                            raise Exception("INVALID_INDEX")
+                    except:
+                        return
+                    updated_trade_product = Vars.trades[update_index]['product']
+                    updated_trade_quantity = Vars.trades[update_index]['quantity']
+                    Vars.trades[update_index]['product'] = product_name
+                    Vars.trades[update_index]['quantity'] = quantity
+                    Vars.trades[update_index]['sell_price'] = sell_price
+                    Vars.trades[update_index]['payment_method'] = payment_method
+                    Vars.trades[update_index]['buyer_name'] = buyer_name
+                    Vars.trades[update_index]['total_cost'] = total_cost
+                    Vars.trades[update_index]['profit'] = profit
+                    Vars.trades[update_index]['transaction_date'] = transaction_date
+                    del Vars.trades[update_index]['encrypted_line']
+                    Vars.products[updated_trade_product]['stock'] += updated_trade_quantity
                 Vars.products[product_name]['stock'] -= quantity
+                Interface.update_trades_table(self)
                 Interface.update_product_table(self)
             else:
                 raise Exception("NO_STOCK")
@@ -412,6 +457,27 @@ class Interface:
         except:
             pass
 
+    #carrega dados de um trade nos campos de entrada de transações
+    def load_trade_info(self) -> None:
+        Vars.sleeping_time = 0
+        try:
+            trade_index = abs(int(self.main_menu.trade_load_index.get())) - 1
+            if (trade_index + 1) > len(Vars.trades):
+                raise Exception("INVALID_INDEX")
+        except:
+            return
+        self.main_menu.trade_input1_variable.set(Vars.trades[trade_index]['product'])
+        self.main_menu.trade_input2.delete(0, tk.END)
+        self.main_menu.trade_input2.insert(0, Vars.trades[trade_index]['quantity'])
+        self.main_menu.trade_input3.delete(0, tk.END)
+        self.main_menu.trade_input3.insert(0, Vars.trades[trade_index]['sell_price'])
+        self.main_menu.trade_input4_variable.set(Vars.trades[trade_index]['payment_method'])
+        self.main_menu.trade_input5.delete(0, tk.END)
+        self.main_menu.trade_input5.insert(0, Vars.trades[trade_index]['buyer_name'])
+        self.main_menu.trade_input8.delete(0, tk.END)
+        self.main_menu.trade_input8.insert(0, Vars.trades[trade_index]['transaction_date'])
+
+    #ação do botão de add/upd produto
     def product_button(self) -> None:
         Vars.sleeping_time = 0
         try:
@@ -430,6 +496,7 @@ class Interface:
         except:
             pass
 
+    #ação do botão de pesquisa
     def search_button(self) -> None:
         Vars.sleeping_time = 0
         try:
@@ -443,13 +510,13 @@ class Interface:
         except:
             pass
 
+    #se aproveita da criptografia pronta para salvar o arquivo
     def update_products() -> None:
         with open("products.txt", "w") as f:
             pass
         amount_products = len(Vars.products)
         with open("products.txt", "a") as f:
             for index, product in enumerate(Vars.products.keys()):
-                # print(f"writing trade {index + 1} of {amount_products}")
                 if "encrypted_line" not in Vars.products[product].keys():
                     message = f"{product},{Vars.products[product]['buy_price']},{Vars.products[product]['stock']}"
                     encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
@@ -458,13 +525,13 @@ class Interface:
                 else:
                     f.write(f"{Vars.products[product]['encrypted_line']}\n")
 
+    #se aproveita da criptografia pronta para salvar o arquivo
     def update_trades() -> None:
         with open("trades.txt", "w") as f:
             pass
         amount_trades = len(Vars.trades)
         with open("trades.txt", "a") as f:
             for index, trade in enumerate(Vars.trades):
-                # print(f"writing trade {index + 1} of {amount_trades}")
                 if "encrypted_line" not in trade.keys():
                     message = ""
                     for key in trade.keys():
@@ -477,13 +544,13 @@ class Interface:
                 else:
                     f.write(f"{trade['encrypted_line']}\n")
 
+    #refaz a criptografia para salvar arquivo
     def full_update_trades() -> None:
         with open("trades.txt", "w") as f:
             pass
         amount_trades = len(Vars.trades)
         with open("trades.txt", "a") as f:
             for index, trade in enumerate(Vars.trades):
-                print(f"writing trade {index + 1} of {amount_trades}")
                 message = ""
                 for key in trade.keys():
                     if key != "encrypted_line":
