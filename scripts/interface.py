@@ -181,8 +181,10 @@ class Interface:
         self.main_menu.trade_finish.place(x = 10, y = 500, width = 360, height = 25)
         self.main_menu.trade_error = tk.Label(self.main_root, text = "errors info", font = self.interface_font2, fg = "red")
         self.main_menu.trade_error.place(x = 10, y = 538, width = 360)
-        self.main_menu.trade_remove = tk.Button(self.main_root, text = "REMOVER ÚLTIMA TRANSAÇÃO", font = self.interface_font2, command = lambda *args : Interface.remove_last_trade(self))
-        self.main_menu.trade_remove.place(x = 10, y = 570, width = 360, height = 25)
+        self.main_menu.trade_remove = tk.Button(self.main_root, text = "REMOVER TRANSAÇÃO COM INDEX", font = self.interface_font2, command = lambda *args : Interface.remove_a_trade(self))
+        self.main_menu.trade_remove.place(x = 10, y = 570, width = 300, height = 25)
+        self.main_menu.trade_remove_index = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_remove_index.place(x = 320, y = 570, width = 50, height = 25)
         #trade interface
         self.main_menu.trade_scrollbar = tk.Scrollbar(orient = "vertical", command = self.on_scroll_trades)
         self.main_menu.trade_scrollbar.place(x = 695, y = 10, width = 15, height = 285)
@@ -365,11 +367,16 @@ class Interface:
         self.main_menu.trade_profit.delete(0, tk.END)
         self.main_menu.trade_date.delete(0, tk.END)
 
-    def remove_last_trade(self) -> None:
+    def remove_a_trade(self) -> None:
         Vars.sleeping_time = 0
-        last_trade = Vars.trades[-1]
-        Vars.products[last_trade['product']]['stock'] += last_trade['quantity']
-        Vars.trades.pop()
+        try:
+            trade_index = int(self.main_menu.trade_remove_index.get()) - 1
+        except:
+            return
+        trade_product = Vars.trades[trade_index]['product']
+        trade_quantity = Vars.trades[trade_index]['quantity']
+        Vars.products[trade_product]['stock'] += trade_quantity
+        del Vars.trades[trade_index]
         Interface.update_trades_table(self)
         Interface.update_product_table(self)
 
@@ -396,15 +403,7 @@ class Interface:
                 Interface.verify_date(transaction_date)
             if quantity <= Vars.products[product_name]['stock']:
                 Vars.trades.append({'product':product_name, 'quantity':quantity, 'sell_price':sell_price, 'payment_method':payment_method, 'buyer_name':buyer_name, 'total_cost':total_cost, 'profit':profit, 'transaction_date':transaction_date})
-                self.main_menu.trade_names.insert(0, product_name)
-                self.main_menu.trade_quantity.insert(0, quantity)
-                self.main_menu.trade_sellprice.insert(0, sell_price)
-                self.main_menu.trade_method.insert(0, payment_method)
-                self.main_menu.trade_buyer.insert(0, buyer_name)
-                self.main_menu.trade_cost.insert(0, total_cost)
-                self.main_menu.trade_profit.insert(0, profit)
-                self.main_menu.trade_date.insert(0, transaction_date)
-                Interface.update_trades()
+                Interface.update_trades_table(self)
                 Vars.products[product_name]['stock'] -= quantity
                 Interface.update_product_table(self)
             else:
