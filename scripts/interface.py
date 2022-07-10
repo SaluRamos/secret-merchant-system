@@ -89,6 +89,7 @@ class Interface:
                 valid_quantitys[product] = quantitys[product]
         return valid_quantitys
 
+    #rename all product name from all trade with str 'from_names' inside trade product name for to_name (adm only)
     def rename_trades_product_name(self, from_names: list, to_name: str) -> None:
         trades_copy = Vars.trades.copy()
         for index, trade in enumerate(trades_copy):
@@ -258,7 +259,7 @@ class Interface:
         self.main_menu.products_stock = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
         self.main_menu.products_stock.place(x = 640, y = 450, width = 50, height = 145)
         Interface.update_product_table(self)
-        #info
+        #insights and sleeping time
         self.main_menu.sleeping_time = tk.Label(self.main_root, text = "sleeping time: ...", font = self.interface_font1)
         self.main_menu.sleeping_time.place(x = 715, y = 30)
         self.main_menu.profit_last24hours = tk.Label(self.main_root, text = "", font = self.interface_font1)
@@ -271,7 +272,6 @@ class Interface:
         self.main_menu.profit_last30days.place(x = 715, y = 110)
         self.main_menu.profit_last60days = tk.Label(self.main_root, text = "", font = self.interface_font1)
         self.main_menu.profit_last60days.place(x = 715, y = 130)
-        #insights
         self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
         self.main_menu.search_button.place(x = 715, y = 150, width = 235, height = 25)
         self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
@@ -294,8 +294,13 @@ class Interface:
         self.main_menu.search_result_totalbuyers.place(x = 715, y = 325)
         self.main_menu.search_result_soldquantity = tk.Label(self.main_root, text = "TOTAL VENDIDO: ...", font = self.interface_font1)
         self.main_menu.search_result_soldquantity.place(x = 715, y = 345)
-        #main_loop thread and tkinter loop
+        #exit
+        self.main_menu.search_button = tk.Button(self.main_root, text = "SAIR", font = self.interface_font2, command = lambda *args : os._exit(0))
+        self.main_menu.search_button.place(x = 715, y = 540, width = 235, height = 50)
+        self.main_root.protocol("WM_DELETE_WINDOW", lambda *args : None)
+        #main_loop thread
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
+        #tk loop
         self.main_root.mainloop()
 
     def show_temp_matplot_pie_chart(info: dict, picture_name: str) -> None:
@@ -544,7 +549,7 @@ class Interface:
                 else:
                     f.write(f"{trade['encrypted_line']}\n")
 
-    #refaz a criptografia para salvar arquivo
+    #refaz a criptografia para salvar arquivo (adm_only)
     def full_update_trades() -> None:
         with open("trades.txt", "w") as f:
             pass
