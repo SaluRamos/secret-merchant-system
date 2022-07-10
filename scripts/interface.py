@@ -177,10 +177,10 @@ class Interface:
         self.main_menu.trade_summary8.place(x = 10, y = 478)
         self.main_menu.trade_input8 = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
         self.main_menu.trade_input8.place(x = 220, y = 475, width = 150, height = 25)
-        self.main_menu.trade_finish = tk.Button(self.main_root, text = "FINALIZAR TRANSAÇÃO", font = self.interface_font2, command = lambda *args : Interface.trade_button(self))
-        self.main_menu.trade_finish.place(x = 10, y = 500, width = 360, height = 25)
-        self.main_menu.trade_error = tk.Label(self.main_root, text = "errors info", font = self.interface_font2, fg = "red")
-        self.main_menu.trade_error.place(x = 10, y = 538, width = 360)
+        self.main_menu.trade_finish = tk.Button(self.main_root, text = "ADD/UPD TRANSAÇÃO COM INDEX", font = self.interface_font2, command = lambda *args : Interface.trade_button(self))
+        self.main_menu.trade_finish.place(x = 10, y = 500, width = 300, height = 25)
+        self.main_menu.trade_finish_index = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_finish_index.place(x = 320, y = 500, width = 50, height = 25)
         self.main_menu.trade_remove = tk.Button(self.main_root, text = "REMOVER TRANSAÇÃO COM INDEX", font = self.interface_font2, command = lambda *args : Interface.remove_a_trade(self))
         self.main_menu.trade_remove.place(x = 10, y = 570, width = 300, height = 25)
         self.main_menu.trade_remove_index = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
@@ -409,18 +409,8 @@ class Interface:
             else:
                 raise Exception("NO_STOCK")
             Interface.update_profit(self)
-        except Exception as e:
-            if "could not convert string to float" in str(e):
-                self.main_menu.trade_error['text'] = "SOME FLOAT ENTRY CANNOT\n BE CONVERTED TO FLOAT"
-                self.main_menu.trade_error.place(y = 530)
-            elif "list index out of range" in str(e) or str(e) == "BAD_DATE":
-                self.main_menu.trade_error['text'] = "WRONG DATE"
-                self.main_menu.trade_error.place(y = 538)
-            elif str(e) == "NO_STOCK":
-                self.main_menu.trade_error['text'] = "INSSUFICIENT STOCK FOR THIS PRODUCT"
-                self.main_menu.trade_error.place(y = 538)
-            else:
-                print(str(e))
+        except:
+            pass
 
     def product_button(self) -> None:
         Vars.sleeping_time = 0
@@ -450,9 +440,8 @@ class Interface:
             self.main_menu.search_result_profit['text'] = f"LUCRO DO PRODUTO: {product_info['profit']}"
             self.main_menu.search_result_totalbuyers['text'] = f"TOTAL DE COMPRADORES: {product_info['sold_buyers']}"
             self.main_menu.search_result_soldquantity['text'] = f"TOTAL VENDIDO: {product_info['sold_quantity']}"
-        except Exception as e:
-            if "list index out of range" in str(e) or str(e) == "BAD_DATE":
-                self.main_menu.trade_error['text'] = "WRONG DATE"
+        except:
+            pass
 
     def update_products() -> None:
         with open("products.txt", "w") as f:
