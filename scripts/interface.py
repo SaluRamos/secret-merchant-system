@@ -98,6 +98,7 @@ class Interface:
         Interface.update_trades_table(self)
         Interface.full_update_trades()
 
+    #thread main loop para verificações
     def main_loop(self) -> None:
         while True:
             try:
@@ -114,7 +115,7 @@ class Interface:
             Vars.sleeping_time += 0.1
             self.main_menu.sleeping_time['text'] = f"sleeping time: {round(Vars.sleeping_time, 1)}"
             if Vars.sleeping_time >= Vars.max_sleep_time:
-                os._exit(0)
+                Interface.exit()
 
     #update interface profit info
     def update_profit(self) -> None:
@@ -295,13 +296,18 @@ class Interface:
         self.main_menu.search_result_soldquantity = tk.Label(self.main_root, text = "TOTAL VENDIDO: ...", font = self.interface_font1)
         self.main_menu.search_result_soldquantity.place(x = 715, y = 345)
         #exit
-        self.main_menu.search_button = tk.Button(self.main_root, text = "SAIR", font = self.interface_font2, command = lambda *args : os._exit(0))
+        self.main_menu.search_button = tk.Button(self.main_root, text = "SAIR", font = self.interface_font2, command = lambda *args : Interface.exit())
         self.main_menu.search_button.place(x = 715, y = 540, width = 235, height = 50)
         self.main_root.protocol("WM_DELETE_WINDOW", lambda *args : None)
         #main_loop thread
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         #tk loop
         self.main_root.mainloop()
+
+    def exit():
+        Interface.update_products()
+        Interface.update_trades()
+        os._exit(0)
 
     def show_temp_matplot_pie_chart(info: dict, picture_name: str) -> None:
         Vars.sleeping_time = 0
@@ -349,7 +355,6 @@ class Interface:
         self.main_menu.trade_input1_variable.set("selecione")
         for i in avaible_products:
             self.main_menu.trade_input1['menu'].add_command(label = i, command = tkinter_set_it(self.main_menu.trade_input1_variable, i))
-        Interface.update_products()
 
     #limpa a tabela de produtos
     def reset_product_table(self) -> None:
@@ -369,7 +374,6 @@ class Interface:
             self.main_menu.trade_cost.insert(0, i['total_cost'])
             self.main_menu.trade_profit.insert(0, i['profit'])
             self.main_menu.trade_date.insert(0, i['transaction_date'])
-        Interface.update_trades()
 
     #limpa a tabela de transações
     def reset_trades_table(self) -> None:
@@ -403,6 +407,7 @@ class Interface:
         Vars.sleeping_time = 0
         product_name = self.main_menu.newproduct_input1.get().lower()
         del Vars.products[product_name]
+        del Vars.products[product_name]['encrypted_line']
         Interface.update_product_table(self)
 
     #ação do botão de add/upd transação
@@ -455,6 +460,7 @@ class Interface:
                     Vars.products[updated_trade_product]['stock'] += updated_trade_quantity
                 Vars.products[product_name]['stock'] -= quantity
                 Interface.update_trades_table(self)
+                del Vars.products[product_name]['encrypted_line']
                 Interface.update_product_table(self)
             else:
                 raise Exception("NO_STOCK")
@@ -519,9 +525,8 @@ class Interface:
     def update_products() -> None:
         with open("products.txt", "w") as f:
             pass
-        amount_products = len(Vars.products)
         with open("products.txt", "a") as f:
-            for index, product in enumerate(Vars.products.keys()):
+            for product in Vars.products.keys():
                 if "encrypted_line" not in Vars.products[product].keys():
                     message = f"{product},{Vars.products[product]['buy_price']},{Vars.products[product]['stock']}"
                     encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
@@ -534,9 +539,8 @@ class Interface:
     def update_trades() -> None:
         with open("trades.txt", "w") as f:
             pass
-        amount_trades = len(Vars.trades)
         with open("trades.txt", "a") as f:
-            for index, trade in enumerate(Vars.trades):
+            for trade in Vars.trades:
                 if "encrypted_line" not in trade.keys():
                     message = ""
                     for key in trade.keys():
@@ -544,7 +548,6 @@ class Interface:
                             message = f"{message}{trade[key]},"
                     message = message[0:len(message)-1]
                     encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
-                    Vars.trades[index]['encrypted_line'] = encrypted_message
                     f.write(f"{encrypted_message}\n")
                 else:
                     f.write(f"{trade['encrypted_line']}\n")
@@ -553,14 +556,12 @@ class Interface:
     def full_update_trades() -> None:
         with open("trades.txt", "w") as f:
             pass
-        amount_trades = len(Vars.trades)
         with open("trades.txt", "a") as f:
-            for index, trade in enumerate(Vars.trades):
+            for trade in Vars.trades:
                 message = ""
                 for key in trade.keys():
                     if key != "encrypted_line":
                         message = f"{message}{trade[key]},"
                 message = message[0:len(message)-1]
                 encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
-                Vars.trades[index]['encrypted_line'] = encrypted_message
                 f.write(f"{encrypted_message}\n")
