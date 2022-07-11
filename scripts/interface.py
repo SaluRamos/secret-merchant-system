@@ -427,6 +427,10 @@ class Interface:
             return
         trade_product = Vars.trades[trade_index]['product']
         trade_quantity = Vars.trades[trade_index]['quantity']
+        trade_profit = Vars.trades[trade_index]['profit']
+        trade_cost = Vars.trades[trade_index]['total_cost']
+        if trade_product not in Vars.products.keys():
+            Vars.products[trade_product] = {'stock':0, 'buy_price':(trade_cost - trade_profit)/trade_quantity}
         Vars.products[trade_product]['stock'] += trade_quantity
         try:
             del Vars.trades[trade_index]
