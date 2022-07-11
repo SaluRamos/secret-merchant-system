@@ -4,6 +4,7 @@ from scripts.encryption import Encryption
 from scripts.interface import Interface
 from scripts.variables import Vars
 from scripts.general import General
+from scripts.loader import Loader
 
 def clear_terminal() -> None:
         system_type = platform.system()
@@ -17,8 +18,8 @@ if __name__ == "__main__":
     Vars.encryption_key = General.get_password("type password key: ")
     print()
     try:
-        Vars.load_products()
-        Vars.load_trades()
+        Loader.load_products()
+        Loader.load_trades()
     except:
         print("different password!         ")
         sure = input("are you sure (y/n)? ")
