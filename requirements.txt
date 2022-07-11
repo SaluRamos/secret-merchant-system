@@ -1,0 +1,5 @@
+getch==1.0
+cryptography==3.4.8
+colorama==0.4.4
+opencv-python==4.3.0.38
+matplotlib==3.5.2

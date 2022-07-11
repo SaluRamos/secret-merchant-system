@@ -1,0 +1,8 @@
+products.txt
+trades.txt
+scripts/__pycache__/
+backups/
+lista beneficiados.txt
+images/
+build/
+dist/
