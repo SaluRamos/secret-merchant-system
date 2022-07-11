@@ -556,8 +556,7 @@ class Interface:
             except:
                 pass
             Interface.update_product_table(self)
-        except Exception as e:
-            print(str(e))
+        except:
             pass
 
     #ação do botão de pesquisa
