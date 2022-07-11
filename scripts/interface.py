@@ -92,13 +92,13 @@ class Interface:
         return valid_quantitys
 
     #rename all product name from all trade with str 'from_names' inside trade product name for to_name (adm only)
-    def rename_trades_product_name(self, from_names: list, to_name: str) -> None:
-        trades_copy = Vars.trades.copy()
-        for index, trade in enumerate(trades_copy):
-            if trade['product'] in from_names:
-                Vars.trades[index]['product'] = to_name
-        Interface.update_trades_table(self)
-        Interface.full_update_trades()
+    # def rename_trades_product_name(self, from_names: list, to_name: str) -> None:
+    #     trades_copy = Vars.trades.copy()
+    #     for index, trade in enumerate(trades_copy):
+    #         if trade['product'] in from_names:
+    #             Vars.trades[index]['product'] = to_name
+    #     Interface.update_trades_table(self)
+    #     Interface.full_update_trades()
 
     #thread main loop para verificações
     def main_loop(self) -> None:
@@ -296,23 +296,23 @@ class Interface:
         self.main_menu.search_result_soldquantity.place(x = 715, y = 345)
         #trade sort type
         self.main_menu.update_trades = tk.Button(self.main_root, text = "ATUALIZAR TRANSAÇÕES", font = self.interface_font2, command = lambda *args : Interface.update_trades_table(self))
-        self.main_menu.update_trades.place(x = 715, y = 450, width = 285, height = 25)
+        self.main_menu.update_trades.place(x = 715, y = 455, width = 285, height = 25)
         self.main_menu.sort_trade_label = tk.Label(self.main_root, text = "SORTEAR POR", font = self.interface_font1)
-        self.main_menu.sort_trade_label.place(x = 715, y = 485)
+        self.main_menu.sort_trade_label.place(x = 715, y = 490)
         self.main_menu.sort_trade_variable = tk.StringVar(self.main_root)
         self.main_menu.sort_trade_variable.set("data")
         self.main_menu.sort_trade_input = tk.OptionMenu(self.main_root, self.main_menu.sort_trade_variable, *['data', 'id'])
-        self.main_menu.sort_trade_input.place(x = 850, y = 480, width = 150, height = 25)
+        self.main_menu.sort_trade_input.place(x = 850, y = 485, width = 150, height = 25)
         self.main_menu.sort_trade_input.config(indicatoron = False)
         #new password
         self.main_menu.new_password1 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
         self.main_menu.new_password1.place(x = 715, y = 515, width = 285, height = 25)
         self.main_menu.new_password1.insert(0, "digite sua nova senha")
         self.main_menu.new_password2 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
-        self.main_menu.new_password2.place(x = 715, y = 540, width = 285, height = 25)
+        self.main_menu.new_password2.place(x = 715, y = 545, width = 285, height = 25)
         self.main_menu.new_password2.insert(0, "repita sua nova senha")
         self.main_menu.change_password = tk.Button(self.main_root, text = "ALTERAR SENHA DE CRIPTOGRAFIA", font = self.interface_font2, command = lambda *args : Interface.new_password(self))
-        self.main_menu.change_password.place(x = 715, y = 565, width = 285, height = 25)
+        self.main_menu.change_password.place(x = 715, y = 570, width = 285, height = 25)
         #main_loop thread, update tables, configs, tkinter mainloop
         self.main_root.protocol("WM_DELETE_WINDOW", lambda *args : Interface.exit())
         Interface.update_trades_table(self)
