@@ -121,15 +121,15 @@ class Interface:
 
     #update interface profit info
     def update_profit(self) -> None:
-        self.main_menu.profit_last24hours['text'] = f"lucro últimas 24 horas: {Interface.profit_last_days(1)}"
+        self.main_menu.profit_last24hours['text'] = f"lucro de hoje: {Interface.profit_last_days(1)}"
         self.main_menu.profit_last7days['text'] = f"lucro últimos 7 dias: {Interface.profit_last_days(7)}"
         self.main_menu.profit_last14days['text'] = f"lucro últimos 14 dias: {Interface.profit_last_days(14)}"
         self.main_menu.profit_last30days['text'] = f"lucro últimos 30 dias: {Interface.profit_last_days(30)}"
-        self.main_menu.profit_last60days['text'] = f"lucro últimos 60 dias: {Interface.profit_last_days(60)}"
+        self.main_menu.profit_ever['text'] = f"lucro de sempre: {Interface.profit_last_days(9999)}"
 
     def create_window(self) -> None:
         self.main_root.resizable(False, False)
-        self.main_root.geometry("960x600")
+        self.main_root.geometry("1010x600")
         self.main_root.config(menu = self.main_menu)
         # self.main_root.iconbitmap(r"images/icon.ico")
         self.main_root.title("SECRET MERCHANT SYSTEM")
@@ -146,12 +146,12 @@ class Interface:
         self.main_menu.profit_last14days.place(x = 715, y = 90)
         self.main_menu.profit_last30days = tk.Label(self.main_root, text = "", font = self.interface_font1)
         self.main_menu.profit_last30days.place(x = 715, y = 110)
-        self.main_menu.profit_last60days = tk.Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last60days.place(x = 715, y = 130)
+        self.main_menu.profit_ever = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_ever.place(x = 715, y = 130)
         self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
-        self.main_menu.search_button.place(x = 715, y = 150, width = 235, height = 25)
+        self.main_menu.search_button.place(x = 715, y = 150, width = 285, height = 25)
         self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
-        self.main_menu.search_button.place(x = 715, y = 180, width = 235, height = 25)
+        self.main_menu.search_button.place(x = 715, y = 180, width = 285, height = 25)
         #new/update/remove trade
         self.main_menu.trade_summary1 = tk.Label(self.main_root, text = "PRODUTO", font = self.interface_font1)
         self.main_menu.trade_summary1.place(x = 10, y = 303)
@@ -281,13 +281,13 @@ class Interface:
         self.main_menu.search_summary1 = tk.Label(self.main_root, text = "NOME", font = self.interface_font1)
         self.main_menu.search_summary1.place(x = 715, y = 218)
         self.main_menu.search_name = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
-        self.main_menu.search_name.place(x = 850, y = 215, width = 100, height = 25)
+        self.main_menu.search_name.place(x = 860, y = 215, width = 140, height = 25)
         self.main_menu.search_summary2 = tk.Label(self.main_root, text = "DESDE (DIA/MÊS/ANO)", font = self.interface_font1)
         self.main_menu.search_summary2.place(x = 715, y = 248)
         self.main_menu.search_date = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
-        self.main_menu.search_date.place(x = 850, y = 245, width = 100, height = 25)
+        self.main_menu.search_date.place(x = 860, y = 245, width = 140, height = 25)
         self.main_menu.search_button = tk.Button(self.main_root, text = "PESQUISAR INFO DO PRODUTO", font = self.interface_font2, command = lambda *args : Interface.search_button(self))
-        self.main_menu.search_button.place(x = 715, y = 275, width = 235, height = 25)
+        self.main_menu.search_button.place(x = 715, y = 275, width = 285, height = 25)
         self.main_menu.search_result_profit = tk.Label(self.main_root, text = "LUCRO DO PRODUTO: ...", font = self.interface_font1)
         self.main_menu.search_result_profit.place(x = 715, y = 305)
         self.main_menu.search_result_totalbuyers = tk.Label(self.main_root, text = "TOTAL DE COMPRADORES: ...", font = self.interface_font1)
@@ -296,26 +296,41 @@ class Interface:
         self.main_menu.search_result_soldquantity.place(x = 715, y = 345)
         #trade sort type
         self.main_menu.update_trades = tk.Button(self.main_root, text = "ATUALIZAR TRANSAÇÕES", font = self.interface_font2, command = lambda *args : Interface.update_trades_table(self))
-        self.main_menu.update_trades.place(x = 715, y = 480, width = 235, height = 25)
+        self.main_menu.update_trades.place(x = 715, y = 450, width = 285, height = 25)
         self.main_menu.sort_trade_label = tk.Label(self.main_root, text = "SORTEAR POR", font = self.interface_font1)
-        self.main_menu.sort_trade_label.place(x = 715, y = 515)
+        self.main_menu.sort_trade_label.place(x = 715, y = 485)
         self.main_menu.sort_trade_variable = tk.StringVar(self.main_root)
         self.main_menu.sort_trade_variable.set("data")
         self.main_menu.sort_trade_input = tk.OptionMenu(self.main_root, self.main_menu.sort_trade_variable, *['data', 'id'])
-        self.main_menu.sort_trade_input.place(x = 850, y = 510, width = 100, height = 25)
+        self.main_menu.sort_trade_input.place(x = 850, y = 480, width = 150, height = 25)
         self.main_menu.sort_trade_input.config(indicatoron = False)
-        #exit
-        self.main_menu.search_button = tk.Button(self.main_root, text = "SAIR", font = self.interface_font2, command = lambda *args : Interface.exit())
-        self.main_menu.search_button.place(x = 715, y = 540, width = 235, height = 50)
-        self.main_root.protocol("WM_DELETE_WINDOW", lambda *args : None)
-        #main_loop thread
+        #new password
+        self.main_menu.new_password1 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.new_password1.place(x = 715, y = 515, width = 285, height = 25)
+        self.main_menu.new_password1.insert(0, "digite sua nova senha")
+        self.main_menu.new_password2 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.new_password2.place(x = 715, y = 540, width = 285, height = 25)
+        self.main_menu.new_password2.insert(0, "repita sua nova senha")
+        self.main_menu.change_password = tk.Button(self.main_root, text = "ALTERAR SENHA DE CRIPTOGRAFIA", font = self.interface_font2, command = lambda *args : Interface.new_password(self))
+        self.main_menu.change_password.place(x = 715, y = 565, width = 285, height = 25)
+        #main_loop thread, update tables, configs, tkinter mainloop
+        self.main_root.protocol("WM_DELETE_WINDOW", lambda *args : Interface.exit())
         Interface.update_trades_table(self)
         Interface.update_product_table(self)
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
-        #tk loop
         self.main_root.mainloop()
 
-    def exit():
+    def new_password(self) -> None:
+        Vars.sleeping_time = 0
+        if self.main_menu.new_password1.get() != self.main_menu.new_password2.get():
+            return
+        self.main_root.protocol("WM_DELETE_WINDOW", lambda *args : None)
+        Vars.encryption_key = self.main_menu.new_password1.get()
+        Interface.full_update_products()
+        Interface.full_update_trades()
+        os._exit(0)
+
+    def exit() -> None:
         Interface.update_products()
         Interface.update_trades()
         os._exit(0)
@@ -336,13 +351,13 @@ class Interface:
         os.remove(f"{picture_name}.png")
 
     #gerencia scroll da tabela de produtos
-    def on_scroll_products(self, *args):
+    def on_scroll_products(self, *args) -> None:
         self.main_menu.product_names.yview(*args)
         self.main_menu.product_buyprice.yview(*args)
         self.main_menu.product_stock.yview(*args)
 
     #gerencia scroll da tabela de transações
-    def on_scroll_trades(self, *args):
+    def on_scroll_trades(self, *args) -> None:
         self.main_menu.trade_names.yview(*args)
         self.main_menu.trade_quantity.yview(*args)
         self.main_menu.trade_sellprice.yview(*args)
@@ -559,7 +574,7 @@ class Interface:
         except:
             pass
 
-    #se aproveita da criptografia pronta para salvar o arquivo
+    #se aproveita da criptografia pronta para salvar o arquivo de produtos
     def update_products() -> None:
         with open("products.txt", "w") as f:
             pass
@@ -573,7 +588,21 @@ class Interface:
                 else:
                     f.write(f"{Vars.products[product]['encrypted_line']}\n")
 
-    #se aproveita da criptografia pronta para salvar o arquivo
+    #se aproveita da criptografia pronta para salvar o arquivo de produtos
+    def full_update_products() -> None:
+        with open("products.txt", "w") as f:
+            pass
+        amount_products = len(Vars.products)
+        with open("products.txt", "a") as f:
+            for index, product in enumerate(Vars.products.keys()):
+                print(f"WRITING PRODUCT {index + 1} of {amount_products}", end = "\r")
+                message = f"{product},{Vars.products[product]['buy_price']},{Vars.products[product]['stock']}"
+                encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
+                Vars.products[product]['encrypted_line'] = encrypted_message
+                f.write(f"{encrypted_message}\n")
+            print()
+
+    #se aproveita da criptografia pronta para salvar o arquivo de transações
     def update_trades() -> None:
         with open("trades.txt", "w") as f:
             pass
@@ -590,16 +619,19 @@ class Interface:
                 else:
                     f.write(f"{trade['encrypted_line']}\n")
 
-    #refaz a criptografia para salvar arquivo (adm_only)
+    #refaz a criptografia para salvar arquivo de transações
     def full_update_trades() -> None:
         with open("trades.txt", "w") as f:
             pass
+        amount_trades = len(Vars.trades)
         with open("trades.txt", "a") as f:
-            for trade in Vars.trades:
+            for index, trade in enumerate(Vars.trades):
+                print(f"WRITING TRADE {index + 1} of {amount_trades}", end = "\r")
                 message = ""
                 for key in trade.keys():
-                    if key != "encrypted_line":
+                    if key != "encrypted_line" and key != "id" and key != "unix_date":
                         message = f"{message}{trade[key]},"
                 message = message[0:len(message)-1]
                 encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
                 f.write(f"{encrypted_message}\n")
+            print()
