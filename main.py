@@ -1,11 +1,19 @@
 import os
+import platform
 from scripts.encryption import Encryption
 from scripts.interface import Interface
 from scripts.variables import Vars
 from scripts.general import General
 
+def clear_terminal() -> None:
+        system_type = platform.system()
+        if system_type == "Windows":
+            os.system("cls")
+        elif system_type == "Linux":
+            os.system("clear")
+
 if __name__ == "__main__":
-    os.system("clear")
+    clear_terminal()
     Vars.encryption_key = General.get_password("type password key: ")
     print()
     try:
@@ -18,7 +26,7 @@ if __name__ == "__main__":
             pass
         else:
             os._exit(0)
-    os.system("clear")
+    clear_terminal()
     if Vars.products == {} and Vars.trades == []:
         print("THIS WILL BE YOUR NEW PASSWORD! REMEMBER IT!")
     Interface().create_window()

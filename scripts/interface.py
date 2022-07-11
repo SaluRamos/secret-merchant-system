@@ -4,7 +4,6 @@ import tkinter as tk
 from tkinter import _setit as tkinter_set_it
 from matplotlib import pyplot as plt
 from PIL import Image
-import numpy
 import threading
 import time
 import os
@@ -12,19 +11,21 @@ import datetime
 
 class Interface:
 
+    #cria um objeto do tipo interface
     def __init__(self) -> None:
         self.main_root = tk.Tk()
         self.main_menu = tk.Menu(self.main_root)
 
+    #verifica se uma str compreende as regras que uma data deve obdecer para ser processada pelo software
     def verify_date(transaction_date: str) -> None:
         transaction_date = transaction_date.lower()
         trade_year = transaction_date.split("/")[2]
-        trade_day = transaction_date.split("/")[0]
+        trade_day = int(transaction_date.split("/")[0])
         int(trade_year) #year_verification
-        int(trade_day) #day_verification
-        if len(transaction_date.split("/")) != 3 or len(trade_year) == 1 or len(trade_year) == 3 or len(trade_day) > 2:
+        if len(transaction_date.split("/")) != 3 or len(trade_year) == 1 or len(trade_year) == 3 or trade_day > 31:
             raise Exception("BAD_DATE")
 
+    #retorna o timestamp de uma data (com horas as 00:00:00, GMT-0300 (Brasilia Standard Time))
     def get_date_timestamp(trade_date: str) -> float:
         trade_date = trade_date.lower()
         if len(trade_date.split('/')[2]) == 2:
@@ -37,20 +38,19 @@ class Interface:
             trade_month = Vars.months_to_number[trade_date.split("/")[1]]
         trade_dt = datetime.datetime(trade_year, trade_month, int(trade_date.split("/")[0])) #year, month, day
         trade_timestamp = trade_dt.replace(tzinfo = datetime.timezone.utc).timestamp()
-        return trade_timestamp
+        return trade_timestamp + 10800
 
-    #return profit from all trades since 'max_days'
+    #retorna lucro total dos últimos x dias
     def profit_last_days(max_days: int) -> float:
         profit = 0
         atual_timestamp = time.time()
-        for i in Vars.trades:
-            trade_date = i['transaction_date'].split(" ")[0].lower()
-            trade_timestamp = Interface.get_date_timestamp(trade_date)
+        for trade in Vars.trades:
+            trade_timestamp = Interface.get_date_timestamp(trade['transaction_date'])
             if (atual_timestamp - trade_timestamp)/86400 <= max_days:
-                profit += i['profit']
+                profit += trade['profit']
         return round(profit, 2)
 
-    #return specific product info since 'date'
+    #retorna informações sobre determinado produto desde certa data
     def get_product_info(product_name: str, from_date: str) -> dict:
         profit = 0
         sold_quantity = 0
@@ -63,6 +63,7 @@ class Interface:
                 sold_buyers += 1
         return {'profit':round(profit, 2), 'sold_quantity':round(sold_quantity, 2), 'sold_buyers':sold_buyers}
 
+    #retorna insights sobre produto com maior lucro
     def get_trades_profit_insights() -> dict:
         profits = {}
         for trade in Vars.trades:
@@ -75,6 +76,7 @@ class Interface:
             profits[i] = round(profits[i], 2)
         return profits
 
+    #retorna insights sobre produto+qtd mais vendidos
     def get_trades_qtd_insights() -> dict:
         quantitys = {}
         for trade in Vars.trades:
@@ -133,7 +135,25 @@ class Interface:
         self.main_root.title("SECRET MERCHANT SYSTEM")
         self.interface_font1 = ("Arial", "9")
         self.interface_font2 = ("Arial", "10", "bold")
-        #new/remove trade
+        #insights and sleeping time
+        self.main_menu.sleeping_time = tk.Label(self.main_root, text = "sleeping time: ...", font = self.interface_font1)
+        self.main_menu.sleeping_time.place(x = 715, y = 30)
+        self.main_menu.profit_last24hours = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last24hours.place(x = 715, y = 50)
+        self.main_menu.profit_last7days = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last7days.place(x = 715, y = 70)
+        self.main_menu.profit_last14days = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last14days.place(x = 715, y = 90)
+        self.main_menu.profit_last30days = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last30days.place(x = 715, y = 110)
+        self.main_menu.profit_last60days = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last60days.place(x = 715, y = 130)
+        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
+        self.main_menu.search_button.place(x = 715, y = 150, width = 235, height = 25)
+        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
+        self.main_menu.search_button.place(x = 715, y = 180, width = 235, height = 25)
+        Interface.update_profit(self)
+        #new/update/remove trade
         self.main_menu.trade_summary1 = tk.Label(self.main_root, text = "PRODUTO", font = self.interface_font1)
         self.main_menu.trade_summary1.place(x = 10, y = 303)
         self.main_menu.trade_input1_variable = tk.StringVar(self.main_root)
@@ -260,24 +280,6 @@ class Interface:
         self.main_menu.products_stock = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.products_scrollbar.set)
         self.main_menu.products_stock.place(x = 640, y = 450, width = 50, height = 145)
         Interface.update_product_table(self)
-        #insights and sleeping time
-        self.main_menu.sleeping_time = tk.Label(self.main_root, text = "sleeping time: ...", font = self.interface_font1)
-        self.main_menu.sleeping_time.place(x = 715, y = 30)
-        self.main_menu.profit_last24hours = tk.Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last24hours.place(x = 715, y = 50)
-        self.main_menu.profit_last7days = tk.Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last7days.place(x = 715, y = 70)
-        self.main_menu.profit_last14days = tk.Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last14days.place(x = 715, y = 90)
-        self.main_menu.profit_last30days = tk.Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last30days.place(x = 715, y = 110)
-        self.main_menu.profit_last60days = tk.Label(self.main_root, text = "", font = self.interface_font1)
-        self.main_menu.profit_last60days.place(x = 715, y = 130)
-        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
-        self.main_menu.search_button.place(x = 715, y = 150, width = 235, height = 25)
-        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
-        self.main_menu.search_button.place(x = 715, y = 180, width = 235, height = 25)
-        Interface.update_profit(self)
         #search
         self.main_menu.search_summary1 = tk.Label(self.main_root, text = "NOME", font = self.interface_font1)
         self.main_menu.search_summary1.place(x = 715, y = 218)
@@ -374,6 +376,7 @@ class Interface:
             self.main_menu.trade_cost.insert(0, i['total_cost'])
             self.main_menu.trade_profit.insert(0, i['profit'])
             self.main_menu.trade_date.insert(0, i['transaction_date'])
+        Interface.update_profit(self)
 
     #limpa a tabela de transações
     def reset_trades_table(self) -> None:
@@ -398,7 +401,14 @@ class Interface:
         trade_product = Vars.trades[trade_index]['product']
         trade_quantity = Vars.trades[trade_index]['quantity']
         Vars.products[trade_product]['stock'] += trade_quantity
-        del Vars.trades[trade_index]
+        try:
+            del Vars.trades[trade_index]
+        except:
+            pass
+        try:
+            del Vars.products[trade_product]['encrypted_line']
+        except:
+            pass
         Interface.update_trades_table(self)
         Interface.update_product_table(self)
 
@@ -406,8 +416,10 @@ class Interface:
     def remove_product(self) -> None:
         Vars.sleeping_time = 0
         product_name = self.main_menu.newproduct_input1.get().lower()
-        del Vars.products[product_name]
-        del Vars.products[product_name]['encrypted_line']
+        try:
+            del Vars.products[product_name]
+        except:
+            pass
         Interface.update_product_table(self)
 
     #ação do botão de add/upd transação
@@ -456,15 +468,20 @@ class Interface:
                     Vars.trades[update_index]['total_cost'] = total_cost
                     Vars.trades[update_index]['profit'] = profit
                     Vars.trades[update_index]['transaction_date'] = transaction_date
-                    del Vars.trades[update_index]['encrypted_line']
+                    try:
+                        del Vars.trades[update_index]['encrypted_line']
+                    except:
+                        pass
                     Vars.products[updated_trade_product]['stock'] += updated_trade_quantity
                 Vars.products[product_name]['stock'] -= quantity
+                try:
+                    del Vars.products[product_name]['encrypted_line']
+                except:
+                    pass
                 Interface.update_trades_table(self)
-                del Vars.products[product_name]['encrypted_line']
                 Interface.update_product_table(self)
             else:
                 raise Exception("NO_STOCK")
-            Interface.update_profit(self)
         except:
             pass
 
@@ -503,8 +520,13 @@ class Interface:
                 Vars.products[product_name] = {'buy_price':buy_price, 'stock':stock}
             else:
                 Vars.products[product_name] = {'buy_price':buy_price, 'stock':float(stock)}
+            try:
+                del Vars.products[product_name]['encrypted_line']
+            except:
+                pass
             Interface.update_product_table(self)
-        except:
+        except Exception as e:
+            print(str(e))
             pass
 
     #ação do botão de pesquisa
