@@ -311,9 +311,13 @@ class Interface:
         self.main_menu.new_password1 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.new_password1.place(x = 715, y = 510, width = 300, height = 25)
         self.main_menu.new_password1.insert(0, "digite sua nova senha")
+        self.main_menu.new_password1.bind("<FocusIn>", lambda *args : Interface.password_foc_in(self.main_menu.new_password1, "digite sua nova senha"))
+        self.main_menu.new_password1.bind("<FocusOut>", lambda *args : Interface.password_foc_out(self.main_menu.new_password1, "digite sua nova senha"))
         self.main_menu.new_password2 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.new_password2.place(x = 715, y = 540, width = 300, height = 25)
         self.main_menu.new_password2.insert(0, "repita sua nova senha")
+        self.main_menu.new_password2.bind("<FocusIn>", lambda *args : Interface.password_foc_in(self.main_menu.new_password2, "repita sua nova senha"))
+        self.main_menu.new_password2.bind("<FocusOut>", lambda *args : Interface.password_foc_out(self.main_menu.new_password2, "repita sua nova senha"))
         self.main_menu.change_password = tk.Button(self.main_root, text = "ALTERAR SENHA DE CRIPTOGRAFIA", font = self.button_font, command = lambda *args : Interface.new_password(self))
         self.main_menu.change_password.place(x = 715, y = 570, width = 300, height = 25)
         #main_loop thread, update tables, configs, tkinter mainloop
@@ -322,6 +326,17 @@ class Interface:
         Interface.update_product_table(self)
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
+
+    def password_foc_in(entry, text) -> None:
+        if not entry.get() or entry.get() == text:
+            entry.delete(0, tk.END)
+        entry.config(show = "*")
+
+    def password_foc_out(entry, text) -> None:
+        if not entry.get():
+            entry.delete(0, tk.END)
+            entry.insert(0, text)
+            entry.config(show = "")
 
     def new_password(self) -> None:
         Vars.sleeping_time = 0
