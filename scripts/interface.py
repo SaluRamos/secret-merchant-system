@@ -145,8 +145,8 @@ class Interface:
         self.main_menu.profit_custom.place(x = 715, y = 70)
         self.main_menu.profit_custom_entry = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.profit_custom_entry.place(x = 835, y = 70, width = 32, height = 20)
-        self.main_menu.profit_custom_value = tk.Label(self.main_root, text = "678.82", font = self.entrylabel_font)
-        self.main_menu.profit_custom_value.place(x = 920, y = 70)
+        self.main_menu.profit_custom_value = tk.Label(self.main_root, text = "...", font = self.entrylabel_font)
+        self.main_menu.profit_custom_value.place(x = 950, y = 70)
         #insights
         self.main_menu.insight_button_qtd = tk.Button(self.main_root, text = "INSIGHTS DE QTD COM PELO MENOS 'X' VENDAS", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
         self.main_menu.insight_button_qtd.place(x = 715, y = 150, width = 300, height = 25)
@@ -543,7 +543,8 @@ class Interface:
                         pass
                 else:
                     new_trade = {}
-                    new_trade['id'] = len(Vars.trades)
+                    new_trade['id'] = Vars.next_trade_id
+                    Vars.next_trade_id += 1
                     new_trade['product'] = product_name
                     new_trade['quantity'] = quantity
                     new_trade['sell_price'] = sell_price
