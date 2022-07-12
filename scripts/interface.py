@@ -133,27 +133,28 @@ class Interface:
         self.main_root.config(menu = self.main_menu)
         # self.main_root.iconbitmap(r"images/icon.ico")
         self.main_root.title("SECRET MERCHANT SYSTEM")
-        self.interface_font1 = ("Arial", "9")
-        self.interface_font2 = ("Arial", "10", "bold")
+        self.entrylabel_font = ("Arial", "9")
+        self.button_font = ("Arial", "10", "bold")
+        self.table_font = ("Arial", "8", "bold")
         #insights and sleeping time
-        self.main_menu.sleeping_time = tk.Label(self.main_root, text = "sleeping time: ...", font = self.interface_font1)
+        self.main_menu.sleeping_time = tk.Label(self.main_root, text = "sleeping time: ...", font = self.entrylabel_font)
         self.main_menu.sleeping_time.place(x = 715, y = 30)
-        self.main_menu.profit_last24hours = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last24hours = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
         self.main_menu.profit_last24hours.place(x = 715, y = 50)
-        self.main_menu.profit_last7days = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last7days = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
         self.main_menu.profit_last7days.place(x = 715, y = 70)
-        self.main_menu.profit_last14days = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last14days = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
         self.main_menu.profit_last14days.place(x = 715, y = 90)
-        self.main_menu.profit_last30days = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_last30days = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
         self.main_menu.profit_last30days.place(x = 715, y = 110)
-        self.main_menu.profit_ever = tk.Label(self.main_root, text = "", font = self.interface_font1)
+        self.main_menu.profit_ever = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
         self.main_menu.profit_ever.place(x = 715, y = 130)
-        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
+        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
         self.main_menu.search_button.place(x = 715, y = 150, width = 285, height = 25)
-        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.interface_font2, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
+        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
         self.main_menu.search_button.place(x = 715, y = 180, width = 285, height = 25)
         #new/update/remove trade
-        self.main_menu.trade_summary1 = tk.Label(self.main_root, text = "PRODUTO", font = self.interface_font1)
+        self.main_menu.trade_summary1 = tk.Label(self.main_root, text = "PRODUTO", font = self.entrylabel_font)
         self.main_menu.trade_summary1.place(x = 10, y = 303)
         self.main_menu.trade_input1_variable = tk.StringVar(self.main_root)
         self.main_menu.trade_input1_variable.set("selecione")
@@ -163,141 +164,141 @@ class Interface:
         self.main_menu.trade_input1 = tk.OptionMenu(self.main_root, self.main_menu.trade_input1_variable, *product_options)
         self.main_menu.trade_input1.place(x = 220, y = 300, width = 150, height = 25)
         self.main_menu.trade_input1.config(indicatoron = False)
-        self.main_menu.trade_summary2 = tk.Label(self.main_root, text = "QUANTIDADE", font = self.interface_font1)
+        self.main_menu.trade_summary2 = tk.Label(self.main_root, text = "QUANTIDADE", font = self.entrylabel_font)
         self.main_menu.trade_summary2.place(x = 10, y = 328)
-        self.main_menu.trade_input2 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.trade_input2 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_input2.place(x = 220, y = 325, width = 150, height = 25)
-        self.main_menu.trade_summary3 = tk.Label(self.main_root, text = "PREÇO DE VENDA", font = self.interface_font1)
+        self.main_menu.trade_summary3 = tk.Label(self.main_root, text = "PREÇO DE VENDA", font = self.entrylabel_font)
         self.main_menu.trade_summary3.place(x = 10, y = 353)
-        self.main_menu.trade_input3 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.trade_input3 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_input3.place(x = 220, y = 350, width = 150, height = 25)
-        self.main_menu.trade_summary4 = tk.Label(self.main_root, text = "MÉTODO DE PAGAMENTO", font = self.interface_font1)
+        self.main_menu.trade_summary4 = tk.Label(self.main_root, text = "MÉTODO DE PAGAMENTO", font = self.entrylabel_font)
         self.main_menu.trade_summary4.place(x = 10, y = 378)
         self.main_menu.trade_input4_variable = tk.StringVar(self.main_root)
         self.main_menu.trade_input4_variable.set("selecione")
         self.main_menu.trade_input4 = tk.OptionMenu(self.main_root, self.main_menu.trade_input4_variable, *Vars.payment_methods)
         self.main_menu.trade_input4.place(x = 220, y = 375, width = 150, height = 25)
         self.main_menu.trade_input4.config(indicatoron = False)
-        self.main_menu.trade_summary5 = tk.Label(self.main_root, text = "NOME DO COMPRADOR", font = self.interface_font1)
+        self.main_menu.trade_summary5 = tk.Label(self.main_root, text = "NOME DO COMPRADOR", font = self.entrylabel_font)
         self.main_menu.trade_summary5.place(x = 10, y = 403)
-        self.main_menu.trade_input5 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.trade_input5 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_input5.place(x = 220, y = 400, width = 150, height = 25)
-        self.main_menu.trade_summary6 = tk.Label(self.main_root, text = "CUSTO TOTAL", font = self.interface_font1)
+        self.main_menu.trade_summary6 = tk.Label(self.main_root, text = "CUSTO TOTAL", font = self.entrylabel_font)
         self.main_menu.trade_summary6.place(x = 10, y = 428)
         self.main_menu.trade_totalcost_variable = tk.StringVar()
         self.main_menu.trade_totalcost_variable.set("...")
-        self.main_menu.trade_output6 = tk.Label(self.main_root, textvariable = self.main_menu.trade_totalcost_variable, font = self.interface_font1, justify = "center")
+        self.main_menu.trade_output6 = tk.Label(self.main_root, textvariable = self.main_menu.trade_totalcost_variable, font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_output6.place(x = 220, y = 425, width = 150)
-        self.main_menu.trade_summary7 = tk.Label(self.main_root, text = "LUCRO", font = self.interface_font1)
+        self.main_menu.trade_summary7 = tk.Label(self.main_root, text = "LUCRO", font = self.entrylabel_font)
         self.main_menu.trade_summary7.place(x = 10, y = 453)
         self.main_menu.trade_profit_variable = tk.StringVar()
         self.main_menu.trade_profit_variable.set("...")
-        self.main_menu.trade_output7 = tk.Label(self.main_root, textvariable = self.main_menu.trade_profit_variable, font = self.interface_font1, justify = "center")
+        self.main_menu.trade_output7 = tk.Label(self.main_root, textvariable = self.main_menu.trade_profit_variable, font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_output7.place(x = 220, y = 450, width = 150)
-        self.main_menu.trade_summary8 = tk.Label(self.main_root, text = "DATA (DIA/MÊS/ANO)", font = self.interface_font1)
+        self.main_menu.trade_summary8 = tk.Label(self.main_root, text = "DATA (DIA/MÊS/ANO)", font = self.entrylabel_font)
         self.main_menu.trade_summary8.place(x = 10, y = 478)
-        self.main_menu.trade_input8 = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_input8 = tk.Entry(self.main_root, text = "", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_input8.place(x = 220, y = 475, width = 150, height = 25)
-        self.main_menu.trade_load = tk.Button(self.main_root, text = "CARREGAR TRANSAÇÃO COM INDEX", font = self.interface_font2, command = lambda *args : Interface.load_trade_info(self))
+        self.main_menu.trade_load = tk.Button(self.main_root, text = "CARREGAR TRANSAÇÃO COM INDEX", font = self.button_font, command = lambda *args : Interface.load_trade_info(self))
         self.main_menu.trade_load.place(x = 10, y = 510, width = 300, height = 25)
-        self.main_menu.trade_load_index = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_load_index = tk.Entry(self.main_root, text = "", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_load_index.place(x = 320, y = 510, width = 50, height = 25)
-        self.main_menu.trade_finish = tk.Button(self.main_root, text = "ADD/UPD TRANSAÇÃO COM INDEX", font = self.interface_font2, command = lambda *args : Interface.trade_button(self))
+        self.main_menu.trade_finish = tk.Button(self.main_root, text = "ADD/UPD TRANSAÇÃO COM INDEX", font = self.button_font, command = lambda *args : Interface.trade_button(self))
         self.main_menu.trade_finish.place(x = 10, y = 540, width = 300, height = 25)
-        self.main_menu.trade_finish_index = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_finish_index = tk.Entry(self.main_root, text = "", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_finish_index.place(x = 320, y = 540, width = 50, height = 25)
-        self.main_menu.trade_remove = tk.Button(self.main_root, text = "REMOVER TRANSAÇÃO COM INDEX", font = self.interface_font2, command = lambda *args : Interface.remove_a_trade(self))
+        self.main_menu.trade_remove = tk.Button(self.main_root, text = "REMOVER TRANSAÇÃO COM INDEX", font = self.button_font, command = lambda *args : Interface.remove_a_trade(self))
         self.main_menu.trade_remove.place(x = 10, y = 570, width = 300, height = 25)
-        self.main_menu.trade_remove_index = tk.Entry(self.main_root, text = "", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_remove_index = tk.Entry(self.main_root, text = "", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_remove_index.place(x = 320, y = 570, width = 50, height = 25)
         #trade interface
         self.main_menu.trade_scrollbar = tk.Scrollbar(orient = "vertical", command = self.on_scroll_trades)
         self.main_menu.trade_scrollbar.place(x = 695, y = 10, width = 15, height = 285)
-        self.main_menu.trade_summary1 = tk.Label(self.main_root, text = "PRODUTO", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_summary1 = tk.Label(self.main_root, text = "PRODUTO", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_summary1.place(x = 10, y = 10, width = 150)
-        self.main_menu.trade_summary2 = tk.Label(self.main_root, text = "QTD", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_summary2 = tk.Label(self.main_root, text = "QTD", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_summary2.place(x = 160, y = 10, width = 50)
-        self.main_menu.trade_summary3 = tk.Label(self.main_root, text = "VENDA", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_summary3 = tk.Label(self.main_root, text = "VENDA", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_summary3.place(x = 210, y = 10, width = 50)
-        self.main_menu.trade_summary4 = tk.Label(self.main_root, text = "MÉTODO", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_summary4 = tk.Label(self.main_root, text = "MÉTODO", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_summary4.place(x = 260, y = 10, width = 100)
-        self.main_menu.trade_summary5 = tk.Label(self.main_root, text = "COMPRADOR", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_summary5 = tk.Label(self.main_root, text = "COMPRADOR", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_summary5.place(x = 360, y = 10, width = 150)
-        self.main_menu.trade_summary6 = tk.Label(self.main_root, text = "CUSTO", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_summary6 = tk.Label(self.main_root, text = "CUSTO", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_summary6.place(x = 510, y = 10, width = 50)
-        self.main_menu.trade_summary7 = tk.Label(self.main_root, text = "LUCRO", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_summary7 = tk.Label(self.main_root, text = "LUCRO", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_summary7.place(x = 560, y = 10, width = 50)
-        self.main_menu.trade_summary8 = tk.Label(self.main_root, text = "DATA", font = self.interface_font1, justify = "center")
+        self.main_menu.trade_summary8 = tk.Label(self.main_root, text = "DATA", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_summary8.place(x = 610, y = 10, width = 80)
-        self.main_menu.trade_names = tk.Listbox(self.main_root, font = self.interface_font1, yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_names = tk.Listbox(self.main_root, font = self.table_font, yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_names.place(x = 10, y = 30, width = 150, height = 265)
-        self.main_menu.trade_quantity = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_quantity = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_quantity.place(x = 160, y = 30, width = 50, height = 265)
-        self.main_menu.trade_sellprice = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_sellprice = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_sellprice.place(x = 210, y = 30, width = 50, height = 265)
-        self.main_menu.trade_method = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_method = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_method.place(x = 260, y = 30, width = 100, height = 265)
-        self.main_menu.trade_buyer = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_buyer = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_buyer.place(x = 360, y = 30, width = 150, height = 265)
-        self.main_menu.trade_cost = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_cost = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_cost.place(x = 510, y = 30, width = 50, height = 265)
-        self.main_menu.trade_profit = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_profit = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_profit.place(x = 560, y = 30, width = 50, height = 265)
-        self.main_menu.trade_date = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_date = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
         self.main_menu.trade_date.place(x = 610, y = 30, width = 80, height = 265)
         #new/update/remove product
-        self.main_menu.newproduct_summary1 = tk.Label(self.main_root, text = "NOME", font = self.interface_font1)
+        self.main_menu.newproduct_summary1 = tk.Label(self.main_root, text = "NOME", font = self.entrylabel_font)
         self.main_menu.newproduct_summary1.place(x = 380, y = 303)
-        self.main_menu.newproduct_input1 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.newproduct_input1 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.newproduct_input1.place(x = 540, y = 300, width = 150, height = 25)
-        self.main_menu.newproduct_summary2 = tk.Label(self.main_root, text = "PREÇO DE CUSTO", font = self.interface_font1)
+        self.main_menu.newproduct_summary2 = tk.Label(self.main_root, text = "PREÇO DE CUSTO", font = self.entrylabel_font)
         self.main_menu.newproduct_summary2.place(x = 380, y = 328)
-        self.main_menu.newproduct_input2 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.newproduct_input2 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.newproduct_input2.place(x = 540, y = 325, width = 150, height = 25)
-        self.main_menu.newproduct_summary3 = tk.Label(self.main_root, text = "STOCK (TIP: USE  ' ± ' )", font = self.interface_font1)
+        self.main_menu.newproduct_summary3 = tk.Label(self.main_root, text = "STOCK (TIP: USE  ' ± ' )", font = self.entrylabel_font)
         self.main_menu.newproduct_summary3.place(x = 380, y = 353)
-        self.main_menu.newproduct_input3 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.newproduct_input3 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.newproduct_input3.place(x = 540, y = 350, width = 150, height = 25)
-        self.main_menu.newproduct_finish = tk.Button(self.main_root, text = "ADD/UPD PRODUTO", font = self.interface_font2, command = lambda *args : Interface.product_button(self))
+        self.main_menu.newproduct_finish = tk.Button(self.main_root, text = "ADD/UPD PRODUTO", font = self.button_font, command = lambda *args : Interface.product_button(self))
         self.main_menu.newproduct_finish.place(x = 380, y = 380, width = 310, height = 25)
-        self.main_menu.product_remove = tk.Button(self.main_root, text = "REMOVER PRODUTO POR NOME", font = self.interface_font2, command = lambda *args : Interface.remove_product(self))
+        self.main_menu.product_remove = tk.Button(self.main_root, text = "REMOVER PRODUTO POR NOME", font = self.button_font, command = lambda *args : Interface.remove_product(self))
         self.main_menu.product_remove.place(x = 380, y = 410, width = 310, height = 25)
         #product interface
-        self.main_menu.product_summary1 = tk.Label(self.main_root, text = "NOME", font = self.interface_font1, justify = "center")
+        self.main_menu.product_summary1 = tk.Label(self.main_root, text = "NOME", font = self.entrylabel_font, justify = "center")
         self.main_menu.product_summary1.place(x = 380, y = 435, width = 210)
-        self.main_menu.product_summary2 = tk.Label(self.main_root, text = "CUSTO", font = self.interface_font1, justify = "center")
+        self.main_menu.product_summary2 = tk.Label(self.main_root, text = "CUSTO", font = self.entrylabel_font, justify = "center")
         self.main_menu.product_summary2.place(x = 590, y = 435, width = 50)
-        self.main_menu.product_summary3 = tk.Label(self.main_root, text = "STOCK", font = self.interface_font1, justify = "center")
+        self.main_menu.product_summary3 = tk.Label(self.main_root, text = "STOCK", font = self.entrylabel_font, justify = "center")
         self.main_menu.product_summary3.place(x = 640, y = 435, width = 50)
         self.main_menu.product_scrollbar = tk.Scrollbar(orient = "vertical", command = self.on_scroll_products)
         self.main_menu.product_scrollbar.place(x = 695, y = 300, width = 15, height = 293)
-        self.main_menu.product_names = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.product_scrollbar.set)
+        self.main_menu.product_names = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.product_scrollbar.set)
         self.main_menu.product_names.place(x = 380, y = 450, width = 210, height = 145)
-        self.main_menu.product_buyprice = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.product_scrollbar.set)
+        self.main_menu.product_buyprice = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.product_scrollbar.set)
         self.main_menu.product_buyprice.place(x = 590, y = 450, width = 50, height = 145)
-        self.main_menu.product_stock = tk.Listbox(self.main_root, font = self.interface_font1, justify = "center", yscrollcommand = self.main_menu.product_scrollbar.set)
+        self.main_menu.product_stock = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.product_scrollbar.set)
         self.main_menu.product_stock.place(x = 640, y = 450, width = 50, height = 145)
         #search
-        self.main_menu.search_summary1 = tk.Label(self.main_root, text = "NOME", font = self.interface_font1)
+        self.main_menu.search_summary1 = tk.Label(self.main_root, text = "NOME", font = self.entrylabel_font)
         self.main_menu.search_summary1.place(x = 715, y = 218)
-        self.main_menu.search_name = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.search_name = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.search_name.place(x = 860, y = 215, width = 140, height = 25)
-        self.main_menu.search_summary2 = tk.Label(self.main_root, text = "DESDE (DIA/MÊS/ANO)", font = self.interface_font1)
+        self.main_menu.search_summary2 = tk.Label(self.main_root, text = "DESDE (DIA/MÊS/ANO)", font = self.entrylabel_font)
         self.main_menu.search_summary2.place(x = 715, y = 248)
-        self.main_menu.search_date = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.search_date = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.search_date.place(x = 860, y = 245, width = 140, height = 25)
-        self.main_menu.search_button = tk.Button(self.main_root, text = "PESQUISAR INFO DO PRODUTO", font = self.interface_font2, command = lambda *args : Interface.search_button(self))
+        self.main_menu.search_button = tk.Button(self.main_root, text = "PESQUISAR INFO DO PRODUTO", font = self.button_font, command = lambda *args : Interface.search_button(self))
         self.main_menu.search_button.place(x = 715, y = 275, width = 285, height = 25)
-        self.main_menu.search_result_profit = tk.Label(self.main_root, text = "LUCRO DO PRODUTO: ...", font = self.interface_font1)
+        self.main_menu.search_result_profit = tk.Label(self.main_root, text = "LUCRO DO PRODUTO: ...", font = self.entrylabel_font)
         self.main_menu.search_result_profit.place(x = 715, y = 305)
-        self.main_menu.search_result_totalbuyers = tk.Label(self.main_root, text = "TOTAL DE COMPRADORES: ...", font = self.interface_font1)
+        self.main_menu.search_result_totalbuyers = tk.Label(self.main_root, text = "TOTAL DE COMPRADORES: ...", font = self.entrylabel_font)
         self.main_menu.search_result_totalbuyers.place(x = 715, y = 325)
-        self.main_menu.search_result_soldquantity = tk.Label(self.main_root, text = "TOTAL VENDIDO: ...", font = self.interface_font1)
+        self.main_menu.search_result_soldquantity = tk.Label(self.main_root, text = "TOTAL VENDIDO: ...", font = self.entrylabel_font)
         self.main_menu.search_result_soldquantity.place(x = 715, y = 345)
         #trade sort type
-        self.main_menu.update_trades = tk.Button(self.main_root, text = "ATUALIZAR TRANSAÇÕES", font = self.interface_font2, command = lambda *args : Interface.update_trades_table(self))
+        self.main_menu.update_trades = tk.Button(self.main_root, text = "ATUALIZAR TRANSAÇÕES", font = self.button_font, command = lambda *args : Interface.update_trades_table(self))
         self.main_menu.update_trades.place(x = 715, y = 455, width = 285, height = 25)
-        self.main_menu.sort_trade_label = tk.Label(self.main_root, text = "SORTEAR POR", font = self.interface_font1)
+        self.main_menu.sort_trade_label = tk.Label(self.main_root, text = "SORTEAR POR", font = self.entrylabel_font)
         self.main_menu.sort_trade_label.place(x = 715, y = 490)
         self.main_menu.sort_trade_variable = tk.StringVar(self.main_root)
         self.main_menu.sort_trade_variable.set("data")
@@ -305,13 +306,13 @@ class Interface:
         self.main_menu.sort_trade_input.place(x = 850, y = 485, width = 150, height = 25)
         self.main_menu.sort_trade_input.config(indicatoron = False)
         #new password
-        self.main_menu.new_password1 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.new_password1 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.new_password1.place(x = 715, y = 515, width = 285, height = 25)
         self.main_menu.new_password1.insert(0, "digite sua nova senha")
-        self.main_menu.new_password2 = tk.Entry(self.main_root, font = self.interface_font1, justify = "center")
+        self.main_menu.new_password2 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.new_password2.place(x = 715, y = 545, width = 285, height = 25)
         self.main_menu.new_password2.insert(0, "repita sua nova senha")
-        self.main_menu.change_password = tk.Button(self.main_root, text = "ALTERAR SENHA DE CRIPTOGRAFIA", font = self.interface_font2, command = lambda *args : Interface.new_password(self))
+        self.main_menu.change_password = tk.Button(self.main_root, text = "ALTERAR SENHA DE CRIPTOGRAFIA", font = self.button_font, command = lambda *args : Interface.new_password(self))
         self.main_menu.change_password.place(x = 715, y = 570, width = 285, height = 25)
         #main_loop thread, update tables, configs, tkinter mainloop
         self.main_root.protocol("WM_DELETE_WINDOW", lambda *args : Interface.exit())
@@ -469,31 +470,21 @@ class Interface:
             else:
                 transaction_date = self.main_menu.trade_input8.get()
                 Interface.verify_date(transaction_date)
+            update_index = self.main_menu.trade_finish_index.get()
             unix_date = Interface.get_date_timestamp(transaction_date)
-            if quantity <= Vars.products[product_name]['stock']:
-                update_index = self.main_menu.trade_finish_index.get()
-                if update_index == "":
-                    new_trade = {}
-                    new_trade['id'] = len(Vars.trades)
-                    new_trade['product'] = product_name
-                    new_trade['quantity'] = quantity
-                    new_trade['sell_price'] = sell_price
-                    new_trade['payment_method'] = payment_method
-                    new_trade['buyer_name'] = buyer_name
-                    new_trade['total_cost'] = total_cost
-                    new_trade['profit'] = profit
-                    new_trade['transaction_date'] = transaction_date
-                    new_trade['unix_date'] = unix_date
-                    Vars.trades.append(new_trade)
-                else:
-                    try:
-                        update_index = abs(int(update_index)) - 1
-                        if (update_index + 1) > len(Vars.trades):
-                            raise Exception("INVALID_INDEX")
-                    except:
-                        return
+            if update_index != "":
+                try:
+                    update_index = abs(int(update_index)) - 1
+                    if (update_index + 1) > len(Vars.trades):
+                        raise Exception("INVALID_INDEX")
                     updated_trade_product = Vars.trades[update_index]['product']
                     updated_trade_quantity = Vars.trades[update_index]['quantity']
+                    Vars.products[updated_trade_product]['stock'] += updated_trade_quantity
+                except:
+                    return
+            if quantity <= Vars.products[product_name]['stock']:
+                if update_index != "":
+
                     Vars.trades[update_index]['product'] = product_name
                     Vars.trades[update_index]['quantity'] = quantity
                     Vars.trades[update_index]['sell_price'] = sell_price
@@ -507,17 +498,31 @@ class Interface:
                         del Vars.trades[update_index]['encrypted_line']
                     except:
                         pass
-                    Vars.products[updated_trade_product]['stock'] += updated_trade_quantity
-                Vars.products[product_name]['stock'] -= quantity
-                try:
-                    del Vars.products[product_name]['encrypted_line']
-                except:
-                    pass
-                Interface.update_trades_table(self)
-                Interface.update_product_table(self)
+                else:
+                    new_trade = {}
+                    new_trade['id'] = len(Vars.trades)
+                    new_trade['product'] = product_name
+                    new_trade['quantity'] = quantity
+                    new_trade['sell_price'] = sell_price
+                    new_trade['payment_method'] = payment_method
+                    new_trade['buyer_name'] = buyer_name
+                    new_trade['total_cost'] = total_cost
+                    new_trade['profit'] = profit
+                    new_trade['transaction_date'] = transaction_date
+                    new_trade['unix_date'] = unix_date
+                    Vars.trades.append(new_trade)
             else:
+                Vars.products[updated_trade_product]['stock'] -= updated_trade_quantity
                 raise Exception("NO_STOCK")
-        except:
+            Vars.products[product_name]['stock'] -= quantity
+            try:
+                del Vars.products[product_name]['encrypted_line']
+            except:
+                pass
+            Interface.update_trades_table(self)
+            Interface.update_product_table(self)
+        except Exception as e:
+            print(str(e))
             pass
 
     #carrega dados de um trade nos campos de entrada de transações
