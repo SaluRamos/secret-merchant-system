@@ -91,15 +91,6 @@ class Interface:
                 valid_quantitys[product] = quantitys[product]
         return valid_quantitys
 
-    #rename all product name from all trade with str 'from_names' inside trade product name for to_name (adm only)
-    # def rename_trades_product_name(self, from_names: list, to_name: str) -> None:
-    #     trades_copy = Vars.trades.copy()
-    #     for index, trade in enumerate(trades_copy):
-    #         if trade['product'] in from_names:
-    #             Vars.trades[index]['product'] = to_name
-    #     Interface.update_trades_table(self)
-    #     Interface.full_update_trades()
-
     #thread main loop para verificações
     def main_loop(self) -> None:
         while True:
@@ -118,6 +109,10 @@ class Interface:
                 Interface.update_profit(self)
             except:
                 pass
+            try:
+                Vars.min_insight_valid_qtd_qtd = abs(int(self.main_menu.insight_button_qtd_min_days.get()))
+            except:
+                pass
             time.sleep(0.1)
             Vars.sleeping_time += 0.1
             self.main_menu.sleeping_time['text'] = f"sleeping time: {round(Vars.sleeping_time, 1)}"
@@ -132,31 +127,34 @@ class Interface:
 
     def create_window(self) -> None:
         self.main_root.resizable(False, False)
-        self.main_root.geometry("1010x600")
+        self.main_root.geometry("1085x600")
         self.main_root.config(menu = self.main_menu)
         # self.main_root.iconbitmap(r"images/icon.ico")
         self.main_root.title("SECRET MERCHANT SYSTEM")
         self.entrylabel_font = ("Arial", "9")
-        self.button_font = ("Arial", "10", "bold")
+        self.button_font = ("Arial", "9", "bold")
         self.table_font = ("Arial", "8", "bold")
         #sleeping time and profits
         self.main_menu.sleeping_time = tk.Label(self.main_root, text = "sleeping time: ...", font = self.entrylabel_font)
-        self.main_menu.sleeping_time.place(x = 715, y = 30)
+        self.main_menu.sleeping_time.place(x = 715, y = 10)
         self.main_menu.profit_last24hours = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
-        self.main_menu.profit_last24hours.place(x = 715, y = 50)
+        self.main_menu.profit_last24hours.place(x = 715, y = 30)
         self.main_menu.profit_ever = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
-        self.main_menu.profit_ever.place(x = 715, y = 70)
+        self.main_menu.profit_ever.place(x = 715, y = 50)
         self.main_menu.profit_custom = tk.Label(self.main_root, text = "lucro customizado de            dias: ", font = self.entrylabel_font)
-        self.main_menu.profit_custom.place(x = 715, y = 90)
+        self.main_menu.profit_custom.place(x = 715, y = 70)
         self.main_menu.profit_custom_entry = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
-        self.main_menu.profit_custom_entry.place(x = 835, y = 90, width = 32, height = 20)
+        self.main_menu.profit_custom_entry.place(x = 835, y = 70, width = 32, height = 20)
         self.main_menu.profit_custom_value = tk.Label(self.main_root, text = "678.82", font = self.entrylabel_font)
-        self.main_menu.profit_custom_value.place(x = 900, y = 90)
+        self.main_menu.profit_custom_value.place(x = 900, y = 70)
         #insights
-        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
-        self.main_menu.search_button.place(x = 715, y = 150, width = 285, height = 25)
-        self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
-        self.main_menu.search_button.place(x = 715, y = 180, width = 285, height = 25)
+        self.main_menu.insight_button_qtd = tk.Button(self.main_root, text = "INSIGHTS DE QTD COM PELO MENOS 'X' VENDAS", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
+        self.main_menu.insight_button_qtd.place(x = 715, y = 150, width = 300, height = 25)
+        self.main_menu.insight_button_qtd_min_days = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
+        self.main_menu.insight_button_qtd_min_days.place(x = 1025, y = 150, width = 50, height = 25)
+        self.main_menu.insight_button_qtd_min_days.insert(0, f"{Vars.min_insight_valid_qtd_qtd}")
+        self.main_menu.insight_button_profit = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
+        self.main_menu.insight_button_profit.place(x = 715, y = 180, width = 300, height = 25)
         #new/update/remove trade
         self.main_menu.trade_summary1 = tk.Label(self.main_root, text = "PRODUTO", font = self.entrylabel_font)
         self.main_menu.trade_summary1.place(x = 10, y = 303)
@@ -286,13 +284,13 @@ class Interface:
         self.main_menu.search_summary1 = tk.Label(self.main_root, text = "NOME", font = self.entrylabel_font)
         self.main_menu.search_summary1.place(x = 715, y = 218)
         self.main_menu.search_name = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
-        self.main_menu.search_name.place(x = 860, y = 215, width = 140, height = 25)
+        self.main_menu.search_name.place(x = 865, y = 215, width = 150, height = 25)
         self.main_menu.search_summary2 = tk.Label(self.main_root, text = "DESDE (DIA/MÊS/ANO)", font = self.entrylabel_font)
         self.main_menu.search_summary2.place(x = 715, y = 248)
         self.main_menu.search_date = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
-        self.main_menu.search_date.place(x = 860, y = 245, width = 140, height = 25)
+        self.main_menu.search_date.place(x = 865, y = 245, width = 150, height = 25)
         self.main_menu.search_button = tk.Button(self.main_root, text = "PESQUISAR INFO DO PRODUTO", font = self.button_font, command = lambda *args : Interface.search_button(self))
-        self.main_menu.search_button.place(x = 715, y = 275, width = 285, height = 25)
+        self.main_menu.search_button.place(x = 715, y = 275, width = 300, height = 25)
         self.main_menu.search_result_profit = tk.Label(self.main_root, text = "LUCRO DO PRODUTO: ...", font = self.entrylabel_font)
         self.main_menu.search_result_profit.place(x = 715, y = 305)
         self.main_menu.search_result_totalbuyers = tk.Label(self.main_root, text = "TOTAL DE COMPRADORES: ...", font = self.entrylabel_font)
@@ -300,24 +298,24 @@ class Interface:
         self.main_menu.search_result_soldquantity = tk.Label(self.main_root, text = "TOTAL VENDIDO: ...", font = self.entrylabel_font)
         self.main_menu.search_result_soldquantity.place(x = 715, y = 345)
         #trade sort type
-        self.main_menu.update_trades = tk.Button(self.main_root, text = "ATUALIZAR TRANSAÇÕES", font = self.button_font, command = lambda *args : Interface.update_trades_table(self))
-        self.main_menu.update_trades.place(x = 715, y = 455, width = 285, height = 25)
         self.main_menu.sort_trade_label = tk.Label(self.main_root, text = "SORTEAR POR", font = self.entrylabel_font)
-        self.main_menu.sort_trade_label.place(x = 715, y = 490)
+        self.main_menu.sort_trade_label.place(x = 715, y = 455)
         self.main_menu.sort_trade_variable = tk.StringVar(self.main_root)
         self.main_menu.sort_trade_variable.set("data")
         self.main_menu.sort_trade_input = tk.OptionMenu(self.main_root, self.main_menu.sort_trade_variable, *['data', 'id'])
-        self.main_menu.sort_trade_input.place(x = 850, y = 485, width = 150, height = 25)
+        self.main_menu.sort_trade_input.place(x = 865, y = 450, width = 150, height = 25)
         self.main_menu.sort_trade_input.config(indicatoron = False)
+        self.main_menu.update_trades = tk.Button(self.main_root, text = "ATUALIZAR SORTEIO DAS TRANSAÇÕES", font = self.button_font, command = lambda *args : Interface.update_trades_table(self))
+        self.main_menu.update_trades.place(x = 715, y = 480, width = 300, height = 25)
         #new password
         self.main_menu.new_password1 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
-        self.main_menu.new_password1.place(x = 715, y = 515, width = 285, height = 25)
+        self.main_menu.new_password1.place(x = 715, y = 510, width = 300, height = 25)
         self.main_menu.new_password1.insert(0, "digite sua nova senha")
         self.main_menu.new_password2 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
-        self.main_menu.new_password2.place(x = 715, y = 540, width = 285, height = 25)
+        self.main_menu.new_password2.place(x = 715, y = 540, width = 300, height = 25)
         self.main_menu.new_password2.insert(0, "repita sua nova senha")
         self.main_menu.change_password = tk.Button(self.main_root, text = "ALTERAR SENHA DE CRIPTOGRAFIA", font = self.button_font, command = lambda *args : Interface.new_password(self))
-        self.main_menu.change_password.place(x = 715, y = 570, width = 285, height = 25)
+        self.main_menu.change_password.place(x = 715, y = 570, width = 300, height = 25)
         #main_loop thread, update tables, configs, tkinter mainloop
         self.main_root.protocol("WM_DELETE_WINDOW", lambda *args : Interface.exit())
         Interface.update_trades_table(self)
