@@ -1,7 +1,7 @@
 from scripts.variables import Vars
 from scripts.encryption import Encryption
 import tkinter as tk
-from tkinter import _setit as tkinter_set_it
+from tkinter import YView, _setit as tkinter_set_it
 from matplotlib import pyplot as plt
 from PIL import Image
 import threading
@@ -141,12 +141,12 @@ class Interface:
         self.main_menu.profit_last24hours.place(x = 715, y = 30)
         self.main_menu.profit_ever = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
         self.main_menu.profit_ever.place(x = 715, y = 50)
-        self.main_menu.profit_custom = tk.Label(self.main_root, text = "lucro customizado de            dias: ", font = self.entrylabel_font)
+        self.main_menu.profit_custom = tk.Label(self.main_root, text = "lucro customizado de             último(s) dias: ", font = self.entrylabel_font)
         self.main_menu.profit_custom.place(x = 715, y = 70)
         self.main_menu.profit_custom_entry = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.profit_custom_entry.place(x = 835, y = 70, width = 32, height = 20)
         self.main_menu.profit_custom_value = tk.Label(self.main_root, text = "678.82", font = self.entrylabel_font)
-        self.main_menu.profit_custom_value.place(x = 900, y = 70)
+        self.main_menu.profit_custom_value.place(x = 920, y = 70)
         #insights
         self.main_menu.insight_button_qtd = tk.Button(self.main_root, text = "INSIGHTS DE QTD COM PELO MENOS 'X' VENDAS", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
         self.main_menu.insight_button_qtd.place(x = 715, y = 150, width = 300, height = 25)
@@ -214,8 +214,6 @@ class Interface:
         self.main_menu.trade_remove_index = tk.Entry(self.main_root, text = "", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_remove_index.place(x = 320, y = 570, width = 50, height = 25)
         #trade interface
-        self.main_menu.trade_scrollbar = tk.Scrollbar(orient = "vertical", command = self.on_scroll_trades)
-        self.main_menu.trade_scrollbar.place(x = 695, y = 10, width = 15, height = 285)
         self.main_menu.trade_summary1 = tk.Label(self.main_root, text = "PRODUTO", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_summary1.place(x = 10, y = 10, width = 150)
         self.main_menu.trade_summary2 = tk.Label(self.main_root, text = "QTD", font = self.entrylabel_font, justify = "center")
@@ -231,55 +229,70 @@ class Interface:
         self.main_menu.trade_summary7 = tk.Label(self.main_root, text = "LUCRO", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_summary7.place(x = 560, y = 10, width = 50)
         self.main_menu.trade_summary8 = tk.Label(self.main_root, text = "DATA", font = self.entrylabel_font, justify = "center")
-        self.main_menu.trade_summary8.place(x = 610, y = 10, width = 80)
-        self.main_menu.trade_names = tk.Listbox(self.main_root, font = self.table_font, yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_summary8.place(x = 610, y = 10, width = 70)
+        self.main_menu.trade_scrollbar = tk.Scrollbar(orient = "vertical", command = self.on_scrollbar_trades)
+        self.main_menu.trade_scrollbar.place(x = 690, y = 10, width = 15, height = 285)
+        self.main_menu.trade_listboxes = []
+        self.main_menu.trade_names = tk.Listbox(self.main_root, font = self.table_font, yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.trade_listboxes, self.main_menu.trade_scrollbar, self.main_menu.trade_names))
         self.main_menu.trade_names.place(x = 10, y = 30, width = 150, height = 265)
-        self.main_menu.trade_quantity = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_quantity = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.trade_listboxes, self.main_menu.trade_scrollbar, self.main_menu.trade_quantity))
         self.main_menu.trade_quantity.place(x = 160, y = 30, width = 50, height = 265)
-        self.main_menu.trade_sellprice = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_sellprice = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.trade_listboxes, self.main_menu.trade_scrollbar, self.main_menu.trade_sellprice))
         self.main_menu.trade_sellprice.place(x = 210, y = 30, width = 50, height = 265)
-        self.main_menu.trade_method = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_method = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.trade_listboxes, self.main_menu.trade_scrollbar, self.main_menu.trade_method))
         self.main_menu.trade_method.place(x = 260, y = 30, width = 100, height = 265)
-        self.main_menu.trade_buyer = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_buyer = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.trade_listboxes, self.main_menu.trade_scrollbar, self.main_menu.trade_buyer))
         self.main_menu.trade_buyer.place(x = 360, y = 30, width = 150, height = 265)
-        self.main_menu.trade_cost = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_cost = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.trade_listboxes, self.main_menu.trade_scrollbar, self.main_menu.trade_cost))
         self.main_menu.trade_cost.place(x = 510, y = 30, width = 50, height = 265)
-        self.main_menu.trade_profit = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
+        self.main_menu.trade_profit = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.trade_listboxes, self.main_menu.trade_scrollbar, self.main_menu.trade_profit))
         self.main_menu.trade_profit.place(x = 560, y = 30, width = 50, height = 265)
-        self.main_menu.trade_date = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.trade_scrollbar.set)
-        self.main_menu.trade_date.place(x = 610, y = 30, width = 80, height = 265)
+        self.main_menu.trade_date = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.trade_listboxes, self.main_menu.trade_scrollbar, self.main_menu.trade_date))
+        self.main_menu.trade_date.place(x = 610, y = 30, width = 70, height = 265)
+        self.main_menu.trade_listboxes.append(self.main_menu.trade_names)
+        self.main_menu.trade_listboxes.append(self.main_menu.trade_quantity)
+        self.main_menu.trade_listboxes.append(self.main_menu.trade_sellprice)
+        self.main_menu.trade_listboxes.append(self.main_menu.trade_method)
+        self.main_menu.trade_listboxes.append(self.main_menu.trade_buyer)
+        self.main_menu.trade_listboxes.append(self.main_menu.trade_cost)
+        self.main_menu.trade_listboxes.append(self.main_menu.trade_profit)
+        self.main_menu.trade_listboxes.append(self.main_menu.trade_date)
         #new/update/remove product
         self.main_menu.newproduct_summary1 = tk.Label(self.main_root, text = "NOME", font = self.entrylabel_font)
         self.main_menu.newproduct_summary1.place(x = 380, y = 303)
         self.main_menu.newproduct_input1 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
-        self.main_menu.newproduct_input1.place(x = 540, y = 300, width = 150, height = 25)
+        self.main_menu.newproduct_input1.place(x = 530, y = 300, width = 150, height = 25)
         self.main_menu.newproduct_summary2 = tk.Label(self.main_root, text = "PREÇO DE CUSTO", font = self.entrylabel_font)
         self.main_menu.newproduct_summary2.place(x = 380, y = 328)
         self.main_menu.newproduct_input2 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
-        self.main_menu.newproduct_input2.place(x = 540, y = 325, width = 150, height = 25)
+        self.main_menu.newproduct_input2.place(x = 530, y = 325, width = 150, height = 25)
         self.main_menu.newproduct_summary3 = tk.Label(self.main_root, text = "STOCK (TIP: USE  ' ± ' )", font = self.entrylabel_font)
         self.main_menu.newproduct_summary3.place(x = 380, y = 353)
         self.main_menu.newproduct_input3 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
-        self.main_menu.newproduct_input3.place(x = 540, y = 350, width = 150, height = 25)
+        self.main_menu.newproduct_input3.place(x = 530, y = 350, width = 150, height = 25)
         self.main_menu.newproduct_finish = tk.Button(self.main_root, text = "ADD/UPD PRODUTO", font = self.button_font, command = lambda *args : Interface.product_button(self))
-        self.main_menu.newproduct_finish.place(x = 380, y = 380, width = 310, height = 25)
+        self.main_menu.newproduct_finish.place(x = 380, y = 380, width = 300, height = 25)
         self.main_menu.product_remove = tk.Button(self.main_root, text = "REMOVER PRODUTO POR NOME", font = self.button_font, command = lambda *args : Interface.remove_product(self))
-        self.main_menu.product_remove.place(x = 380, y = 410, width = 310, height = 25)
+        self.main_menu.product_remove.place(x = 380, y = 410, width = 300, height = 25)
         #product interface
         self.main_menu.product_summary1 = tk.Label(self.main_root, text = "NOME", font = self.entrylabel_font, justify = "center")
-        self.main_menu.product_summary1.place(x = 380, y = 435, width = 210)
+        self.main_menu.product_summary1.place(x = 380, y = 435, width = 200)
         self.main_menu.product_summary2 = tk.Label(self.main_root, text = "CUSTO", font = self.entrylabel_font, justify = "center")
-        self.main_menu.product_summary2.place(x = 590, y = 435, width = 50)
+        self.main_menu.product_summary2.place(x = 580, y = 435, width = 50)
         self.main_menu.product_summary3 = tk.Label(self.main_root, text = "STOCK", font = self.entrylabel_font, justify = "center")
-        self.main_menu.product_summary3.place(x = 640, y = 435, width = 50)
-        self.main_menu.product_scrollbar = tk.Scrollbar(orient = "vertical", command = self.on_scroll_products)
-        self.main_menu.product_scrollbar.place(x = 695, y = 300, width = 15, height = 293)
-        self.main_menu.product_names = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.product_scrollbar.set)
-        self.main_menu.product_names.place(x = 380, y = 450, width = 210, height = 145)
-        self.main_menu.product_buyprice = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.product_scrollbar.set)
-        self.main_menu.product_buyprice.place(x = 590, y = 450, width = 50, height = 145)
-        self.main_menu.product_stock = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = self.main_menu.product_scrollbar.set)
-        self.main_menu.product_stock.place(x = 640, y = 450, width = 50, height = 145)
+        self.main_menu.product_summary3.place(x = 630, y = 435, width = 50)
+        self.main_menu.product_listboxes = []
+        self.main_menu.product_scrollbar = tk.Scrollbar(orient = "vertical", command = self.on_scrollbar_products)
+        self.main_menu.product_scrollbar.place(x = 690, y = 300, width = 15, height = 293)
+        self.main_menu.product_names = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.product_listboxes, self.main_menu.product_scrollbar, self.main_menu.product_names))
+        self.main_menu.product_names.place(x = 380, y = 450, width = 200, height = 145)
+        self.main_menu.product_buyprice = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.product_listboxes, self.main_menu.product_scrollbar, self.main_menu.product_buyprice))
+        self.main_menu.product_buyprice.place(x = 580, y = 450, width = 50, height = 145)
+        self.main_menu.product_stock = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.product_listboxes, self.main_menu.product_scrollbar, self.main_menu.product_stock))
+        self.main_menu.product_stock.place(x = 630, y = 450, width = 50, height = 145)
+        self.main_menu.product_listboxes.append(self.main_menu.product_names)
+        self.main_menu.product_listboxes.append(self.main_menu.product_buyprice)
+        self.main_menu.product_listboxes.append(self.main_menu.product_stock)
         #search
         self.main_menu.search_summary1 = tk.Label(self.main_root, text = "NOME", font = self.entrylabel_font)
         self.main_menu.search_summary1.place(x = 715, y = 218)
@@ -327,17 +340,20 @@ class Interface:
         threading.Thread(target = Interface.main_loop, args = (self,), daemon = False).start()
         self.main_root.mainloop()
 
+    #define ação para focagem de um campo de senha
     def password_foc_in(entry, text) -> None:
         if not entry.get() or entry.get() == text:
             entry.delete(0, tk.END)
         entry.config(show = "*")
 
+    #define ação para desfocagem de um campo de senha
     def password_foc_out(entry, text) -> None:
         if not entry.get():
             entry.delete(0, tk.END)
             entry.insert(0, text)
             entry.config(show = "")
 
+    #define nova senha de criptografia
     def new_password(self) -> None:
         Vars.sleeping_time = 0
         if self.main_menu.new_password1.get() != self.main_menu.new_password2.get():
@@ -348,11 +364,13 @@ class Interface:
         Interface.full_update_trades()
         os._exit(0)
 
+    #fecha o programa
     def exit() -> None:
         Interface.update_products()
         Interface.update_trades()
         os._exit(0)
 
+    #mostra um gráfico de pizza temporário
     def show_temp_matplot_pie_chart(info: dict, picture_name: str) -> None:
         Vars.sleeping_time = 0
         labels = list(info.keys())
@@ -368,14 +386,23 @@ class Interface:
         Image.open(fr"{picture_name}.png").show()
         os.remove(f"{picture_name}.png")
 
-    #gerencia scroll da tabela de produtos
-    def on_scroll_products(self, *args) -> None:
+    #gerencia mouse scroll da tabela de produtos
+    def on_scroll(listboxes, scrollbar, caller_listbox):
+        new_view = caller_listbox.yview()
+        for listbox in listboxes:
+            if id(listbox) != caller_listbox:
+                if listbox.yview() != new_view:
+                    listbox.yview_moveto(new_view[0])
+        scrollbar.set(new_view[0], new_view[1])
+
+    #gerencia scrollbar da tabela de produtos
+    def on_scrollbar_products(self, *args) -> None:
         self.main_menu.product_names.yview(*args)
         self.main_menu.product_buyprice.yview(*args)
         self.main_menu.product_stock.yview(*args)
 
     #gerencia scroll da tabela de transações
-    def on_scroll_trades(self, *args) -> None:
+    def on_scrollbar_trades(self, *args) -> None:
         self.main_menu.trade_names.yview(*args)
         self.main_menu.trade_quantity.yview(*args)
         self.main_menu.trade_sellprice.yview(*args)
