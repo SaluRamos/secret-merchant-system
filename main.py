@@ -1,3 +1,4 @@
+from doctest import testfile
 import os
 import platform
 from scripts.encryption import Encryption
@@ -16,7 +17,7 @@ def clear_terminal() -> None:
 if __name__ == "__main__":
     clear_terminal()
     Vars.encryption_key = General.get_password("type password key: ")
-    print()
+    clear_terminal()
     try:
         Loader.load_products()
         Loader.load_trades()
