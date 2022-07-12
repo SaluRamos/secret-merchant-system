@@ -113,6 +113,11 @@ class Interface:
                 self.main_menu.trade_profit_variable.set(str(profit))
             except:
                 pass
+            try:
+                Vars.custom_profit_days = abs(int(self.main_menu.profit_custom_entry.get()))
+                Interface.update_profit(self)
+            except:
+                pass
             time.sleep(0.1)
             Vars.sleeping_time += 0.1
             self.main_menu.sleeping_time['text'] = f"sleeping time: {round(Vars.sleeping_time, 1)}"
@@ -122,10 +127,8 @@ class Interface:
     #update interface profit info
     def update_profit(self) -> None:
         self.main_menu.profit_last24hours['text'] = f"lucro de hoje: {Interface.profit_last_days(1)}"
-        self.main_menu.profit_last7days['text'] = f"lucro últimos 7 dias: {Interface.profit_last_days(7)}"
-        self.main_menu.profit_last14days['text'] = f"lucro últimos 14 dias: {Interface.profit_last_days(14)}"
-        self.main_menu.profit_last30days['text'] = f"lucro últimos 30 dias: {Interface.profit_last_days(30)}"
-        self.main_menu.profit_ever['text'] = f"lucro de sempre: {Interface.profit_last_days(9999)}"
+        self.main_menu.profit_ever['text'] = f"lucro de sempre: {Interface.profit_last_days(99999)}"
+        self.main_menu.profit_custom_value['text'] = f"{Interface.profit_last_days(Vars.custom_profit_days)}"
 
     def create_window(self) -> None:
         self.main_root.resizable(False, False)
@@ -136,19 +139,20 @@ class Interface:
         self.entrylabel_font = ("Arial", "9")
         self.button_font = ("Arial", "10", "bold")
         self.table_font = ("Arial", "8", "bold")
-        #insights and sleeping time
+        #sleeping time and profits
         self.main_menu.sleeping_time = tk.Label(self.main_root, text = "sleeping time: ...", font = self.entrylabel_font)
         self.main_menu.sleeping_time.place(x = 715, y = 30)
         self.main_menu.profit_last24hours = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
         self.main_menu.profit_last24hours.place(x = 715, y = 50)
-        self.main_menu.profit_last7days = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
-        self.main_menu.profit_last7days.place(x = 715, y = 70)
-        self.main_menu.profit_last14days = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
-        self.main_menu.profit_last14days.place(x = 715, y = 90)
-        self.main_menu.profit_last30days = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
-        self.main_menu.profit_last30days.place(x = 715, y = 110)
         self.main_menu.profit_ever = tk.Label(self.main_root, text = "", font = self.entrylabel_font)
-        self.main_menu.profit_ever.place(x = 715, y = 130)
+        self.main_menu.profit_ever.place(x = 715, y = 70)
+        self.main_menu.profit_custom = tk.Label(self.main_root, text = "lucro customizado de            dias: ", font = self.entrylabel_font)
+        self.main_menu.profit_custom.place(x = 715, y = 90)
+        self.main_menu.profit_custom_entry = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
+        self.main_menu.profit_custom_entry.place(x = 835, y = 90, width = 32, height = 20)
+        self.main_menu.profit_custom_value = tk.Label(self.main_root, text = "678.82", font = self.entrylabel_font)
+        self.main_menu.profit_custom_value.place(x = 900, y = 90)
+        #insights
         self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE QUANTIDADE", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
         self.main_menu.search_button.place(x = 715, y = 150, width = 285, height = 25)
         self.main_menu.search_button = tk.Button(self.main_root, text = "INSIGHTS DE LUCRO", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_profit_insights(), "profit_insights"))
@@ -310,7 +314,7 @@ class Interface:
         self.main_menu.new_password1.place(x = 715, y = 515, width = 285, height = 25)
         self.main_menu.new_password1.insert(0, "digite sua nova senha")
         self.main_menu.new_password2 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
-        self.main_menu.new_password2.place(x = 715, y = 545, width = 285, height = 25)
+        self.main_menu.new_password2.place(x = 715, y = 540, width = 285, height = 25)
         self.main_menu.new_password2.insert(0, "repita sua nova senha")
         self.main_menu.change_password = tk.Button(self.main_root, text = "ALTERAR SENHA DE CRIPTOGRAFIA", font = self.button_font, command = lambda *args : Interface.new_password(self))
         self.main_menu.change_password.place(x = 715, y = 570, width = 285, height = 25)
@@ -484,7 +488,6 @@ class Interface:
                     return
             if quantity <= Vars.products[product_name]['stock']:
                 if update_index != "":
-
                     Vars.trades[update_index]['product'] = product_name
                     Vars.trades[update_index]['quantity'] = quantity
                     Vars.trades[update_index]['sell_price'] = sell_price
@@ -521,8 +524,7 @@ class Interface:
                 pass
             Interface.update_trades_table(self)
             Interface.update_product_table(self)
-        except Exception as e:
-            print(str(e))
+        except:
             pass
 
     #carrega dados de um trade nos campos de entrada de transações
