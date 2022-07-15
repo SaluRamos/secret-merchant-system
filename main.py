@@ -1,4 +1,3 @@
-from doctest import testfile
 import os
 import platform
 from scripts.encryption import Encryption
