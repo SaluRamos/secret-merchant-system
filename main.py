@@ -1,5 +1,6 @@
 import os
 import platform
+import time
 from scripts.encryption import Encryption
 from scripts.interface import Interface
 from scripts.variables import Vars
@@ -20,6 +21,8 @@ if __name__ == "__main__":
     try:
         Loader.load_products()
         Loader.load_trades()
+        # Interface.full_update_trades()
+        # os._exit(0)
     except:
         print("different password!         ")
         sure = input("are you sure (y/n)? ")
