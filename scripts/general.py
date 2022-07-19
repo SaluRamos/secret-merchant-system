@@ -1,8 +1,19 @@
 from base64 import decode
 import os
+import time
 import platform
 
 class General:
+
+    def clear_terminal() -> None:
+        system_type = platform.system()
+        if system_type == "Windows":
+            os.system("cls")
+        elif system_type == "Linux":
+            os.system("clear")
+
+    def atual_date():
+        return time.strftime("%d/%b/%y")
 
     def get_password(value: str, character_substitute: str = "*", resize_adjust: bool = True) -> str:
         password = ''

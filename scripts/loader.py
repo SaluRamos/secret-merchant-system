@@ -30,7 +30,7 @@ class Loader:
                 print(f"LOADING TRADE {index + 1} of {amount_trades}", end = "\r")
                 encrypted_line = line.strip("\n")
                 line = Encryption.password_decrypt(line, Vars.encryption_key)
-                new_trade = {'product':line.split(",")[0], 'quantity':float(line.split(",")[1]), 'sell_price':float(line.split(",")[2]), 'payment_method':line.split(",")[3], 'buyer_name':line.split(",")[4], 'total_cost':float(line.split(",")[5]), 'profit':float(line.split(",")[6]), 'transaction_date':line.split(",")[7], 'encrypted_line':encrypted_line}
+                new_trade = {'product':line.split(",")[0], 'quantity':float(line.split(",")[1]), 'sell_price':float(line.split(",")[2]), 'payment_method':line.split(",")[3], 'buyer_name':line.split(",")[4], 'total_cost':float(line.split(",")[5]), 'profit':float(line.split(",")[6]), 'transaction_date':line.split(",")[7], 'encrypted_line':encrypted_line, "comission_percent":float(line.split(",")[8]), "comission_name":line.split(",")[9]}
                 new_trade['unix_date'] = Interface.get_date_timestamp(new_trade['transaction_date'])
                 new_trade['id'] = Vars.next_trade_id
                 Vars.next_trade_id += 1
