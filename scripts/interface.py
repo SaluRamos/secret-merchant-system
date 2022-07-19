@@ -347,16 +347,18 @@ class Interface:
         self.main_menu.search_summary3.place(x = 655, y = 412)
         self.main_menu.search_todate = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.search_todate.place(x = 805, y = 410, width = 150, height = 25)
-        self.main_menu.search_productbutton = tk.Button(self.main_root, text = "PESQUISAR INFO DO PRODUTO", font = self.button_font, command = lambda *args : Interface.search_button(self))
+        self.main_menu.search_productbutton = tk.Button(self.main_root, text = "PESQUISAR INFO DO PRODUTO", font = self.button_font, command = lambda *args : Interface.product_search_button(self))
         self.main_menu.search_productbutton.place(x = 655, y = 445, width = 300, height = 25)
-        self.main_menu.search_result_profit = tk.Label(self.main_root, text = "LUCRO DO PRODUTO: ...", font = self.entrylabel_font)
-        self.main_menu.search_result_profit.place(x = 655, y = 475)
-        self.main_menu.search_result_totalbuyers = tk.Label(self.main_root, text = "TOTAL DE COMPRADORES: ...", font = self.entrylabel_font)
-        self.main_menu.search_result_totalbuyers.place(x = 655, y = 495)
-        self.main_menu.search_result_soldquantity = tk.Label(self.main_root, text = "TOTAL VENDIDO: ...", font = self.entrylabel_font)
-        self.main_menu.search_result_soldquantity.place(x = 655, y = 515)
-        self.main_menu.search_comissionbutton = tk.Button(self.main_root, text = "PESQUISAR INFO DA COMISSÃO", font = self.button_font, command = lambda *args : Interface.search_button(self))
+        self.main_menu.search_product_result_profit = tk.Label(self.main_root, text = "LUCRO DO PRODUTO: ...", font = self.entrylabel_font)
+        self.main_menu.search_product_result_profit.place(x = 655, y = 475)
+        self.main_menu.search_product_result_totalbuyers = tk.Label(self.main_root, text = "TOTAL DE COMPRADORES: ...", font = self.entrylabel_font)
+        self.main_menu.search_product_result_totalbuyers.place(x = 655, y = 495)
+        self.main_menu.search_product_result_soldquantity = tk.Label(self.main_root, text = "TOTAL VENDIDO: ...", font = self.entrylabel_font)
+        self.main_menu.search_product_result_soldquantity.place(x = 655, y = 515)
+        self.main_menu.search_comissionbutton = tk.Button(self.main_root, text = "PESQUISAR INFO DA COMISSÃO", font = self.button_font, command = lambda *args : Interface.comission_search_button(self))
         self.main_menu.search_comissionbutton.place(x = 655, y = 540, width = 300, height = 25)
+        self.main_menu.search_comission_result_profit = tk.Label(self.main_root, text = "LUCRO DE: ...", font = self.entrylabel_font)
+        self.main_menu.search_comission_result_profit.place(x = 655, y = 570)
         #main_loop thread, update tables, configs, tkinter mainloop
         Interface.update_trades_table(self)
         Interface.update_product_table(self)
@@ -660,8 +662,8 @@ class Interface:
         except:
             pass
 
-    #ação do botão de pesquisa
-    def search_button(self) -> None:
+    #ação do botão de pesquisa de produto
+    def product_search_button(self) -> None:
         Vars.sleeping_time = 0
         try:
             name = self.main_menu.search_name.get().lower()
@@ -671,10 +673,33 @@ class Interface:
             if to_date != "":
                 Interface.verify_date(to_date)
             product_info = Interface.get_product_info(name, from_date, to_date)
-            self.main_menu.search_result_profit['text'] = f"LUCRO DO PRODUTO: {product_info['profit']}"
-            self.main_menu.search_result_totalbuyers['text'] = f"TOTAL DE COMPRADORES: {product_info['sold_buyers']}"
-            self.main_menu.search_result_soldquantity['text'] = f"TOTAL VENDIDO: {product_info['sold_quantity']}"
+            self.main_menu.search_product_result_profit['text'] = f"LUCRO DO PRODUTO: {product_info['profit']}"
+            self.main_menu.search_product_result_totalbuyers['text'] = f"TOTAL DE COMPRADORES: {product_info['sold_buyers']}"
+            self.main_menu.search_product_result_soldquantity['text'] = f"TOTAL VENDIDO: {product_info['sold_quantity']}"
         except:
+            pass
+
+    #ação do botão de pesquisa de comissão
+    def comission_search_button(self) -> None:
+        Vars.sleeping_time = 0
+        try:
+            name = self.main_menu.search_name.get().lower()
+            from_date = self.main_menu.search_fromdate.get()
+            to_date = self.main_menu.search_todate.get()
+            Interface.verify_date(from_date)
+            if to_date != "":
+                Interface.verify_date(to_date)
+            min_valid_timestamp = Interface.get_date_timestamp(from_date)
+            max_valid_timestamp = Interface.get_date_timestamp(to_date)
+            comission_profit = 0
+            for trade in Vars.trades:
+                trade_timestamp = Interface.get_date_timestamp(trade['transaction_date'])
+                if name in trade['comission_name']:
+                    if trade_timestamp >= min_valid_timestamp and trade_timestamp <= max_valid_timestamp:
+                        comission_profit += trade['profit']*(trade['comission_percent']/100)
+            self.main_menu.search_comission_result_profit['text'] = f"LUCRO DE: {round(comission_profit, 2)}"
+        except Exception as e:
+            print(str(e))
             pass
 
     #se aproveita da criptografia pronta para salvar o arquivo de produtos
