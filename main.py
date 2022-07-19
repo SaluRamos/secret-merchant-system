@@ -7,20 +7,16 @@ from scripts.variables import Vars
 from scripts.general import General
 from scripts.loader import Loader
 
-def clear_terminal() -> None:
-        system_type = platform.system()
-        if system_type == "Windows":
-            os.system("cls")
-        elif system_type == "Linux":
-            os.system("clear")
+
 
 if __name__ == "__main__":
-    clear_terminal()
+    General.clear_terminal()
     Vars.encryption_key = General.get_password("type password key: ")
-    clear_terminal()
+    General.clear_terminal()
     try:
         Loader.load_products()
         Loader.load_trades()
+        # esse código serve para atualizar products.txt e trades.txt durante desenvolvimento
         # Interface.full_update_trades()
         # os._exit(0)
     except:
@@ -30,7 +26,7 @@ if __name__ == "__main__":
             pass
         else:
             os._exit(0)
-    clear_terminal()
+    General.clear_terminal()
     if Vars.products == {} and Vars.trades == []:
         print("THIS WILL BE YOUR NEW PASSWORD! REMEMBER IT!")
     Interface().create_window()
