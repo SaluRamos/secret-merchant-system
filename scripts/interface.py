@@ -9,6 +9,8 @@ import threading
 import time
 import os
 import datetime
+import traceback # traceback.format_exc() for tests
+
 
 class Interface:
 
@@ -480,6 +482,8 @@ class Interface:
 
     #atualiza tabela de produtos
     def update_product_table(self) -> None:
+        self.main_menu.trade_input1['menu'].delete(0, 'end')
+        self.main_menu.trade_input1_variable.set("selecione")
         Interface.reset_product_table(self)
         for product_name in Vars.products.keys():
             self.main_menu.product_names.insert(0, product_name)
@@ -621,6 +625,8 @@ class Interface:
                         raise Exception("INVALID_INDEX")
                     updated_trade_product = Vars.trades[update_index]['product']
                     updated_trade_quantity = Vars.trades[update_index]['quantity']
+                    if updated_trade_product not in Vars.products.keys() and product_name != updated_trade_product:
+                        Vars.products[updated_trade_product] = {'stock':0, 'buy_price':0}
                     Vars.products[updated_trade_product]['stock'] += updated_trade_quantity
                 except:
                     return
@@ -657,8 +663,8 @@ class Interface:
                     new_trade['comission_percent'] = comission_percent
                     new_trade['comission_name'] = comission_name
                     Vars.trades.append(new_trade)
+                Vars.products[product_name]['stock'] -= updated_trade_quantity
             else:
-                Vars.products[updated_trade_product]['stock'] -= updated_trade_quantity
                 raise Exception("NO_STOCK")
             Vars.products[product_name]['stock'] -= quantity
             try:
@@ -682,13 +688,13 @@ class Interface:
                 if "+" in debt_value:
                     Vars.debts[debt_name]['value'] += float(debt_value)
                 elif "-" in debt_value:
-                    Vars.debts[debt_name]['value'] -= float(debt_value)
+                    Vars.debts[debt_name]['value'] += float(debt_value)
                 else:
                     Vars.debts[debt_name]['value'] = float(debt_value)
-                try:
-                    del Vars.debts[debt_name]['encrypted_line']
-                except:
-                    pass
+            try:
+                del Vars.debts[debt_name]['encrypted_line']
+            except:
+                pass
             Interface.update_debts_table(self)
         except:
             pass
