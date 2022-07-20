@@ -36,3 +36,18 @@ class Loader:
                 Vars.next_trade_id += 1
                 Vars.trades.append(new_trade)
             print()
+
+    def load_debts() -> None:
+        if os.path.exists("debts.txt") == False:
+            with open("debts.txt", "w") as f:
+                pass
+        with open("debts.txt", "r") as f:
+            debts = f.readlines()
+            amount_debts = len(debts)
+            for index, line in enumerate(debts):
+                print(f"LOADING DEBT {index + 1} of {amount_debts}", end = "\r")
+                encrypted_line = line.strip("\n")
+                line = Encryption.password_decrypt(line, Vars.encryption_key)
+                new_debt = {'value':float(line.split(",")[1]), 'encrypted_line':encrypted_line}
+                Vars.debts[line.split(",")[0]] = new_debt
+            print()

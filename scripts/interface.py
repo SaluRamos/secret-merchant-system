@@ -190,6 +190,7 @@ class Interface:
         self.main_menu.trade_listboxes.append(self.main_menu.trade_buyer)
         self.main_menu.trade_listboxes.append(self.main_menu.trade_cost)
         self.main_menu.trade_listboxes.append(self.main_menu.trade_profit)
+        self.main_menu.trade_listboxes.append(self.main_menu.trade_date)
         #trade sort type
         self.main_menu.sort_trade_label = tk.Label(self.main_root, text = "SORTEAR POR", font = self.entrylabel_font)
         self.main_menu.sort_trade_label.place(x = 965, y = 10)
@@ -199,7 +200,7 @@ class Interface:
         self.main_menu.sort_trade_input.place(x = 1065, y = 8, width = 50, height = 25)
         self.main_menu.sort_trade_input.config(indicatoron = False)
         self.main_menu.update_trades = tk.Button(self.main_root, text = "UPD TRANSAÇÕES", font = self.button_font, command = lambda *args : Interface.update_trades_table(self))
-        self.main_menu.update_trades.place(x = 965, y = 40, width = 150, height = 25)
+        self.main_menu.update_trades.place(x = 965, y = 35, width = 150, height = 25)
         #new/update/remove trade
         self.main_menu.trade_summary1 = tk.Label(self.main_root, text = "PRODUTO", font = self.entrylabel_font)
         self.main_menu.trade_summary1.place(x = 10, y = 303)
@@ -309,23 +310,50 @@ class Interface:
         self.main_menu.product_remove.place(x = 320, y = 410, width = 300, height = 25)
         #product table
         self.main_menu.product_summary1 = tk.Label(self.main_root, text = "NOME DO PRODUTO", font = self.entrylabel_font, justify = "center")
-        self.main_menu.product_summary1.place(x = 320, y = 440, width = 200)
+        self.main_menu.product_summary1.place(x = 320, y = 435, width = 200)
         self.main_menu.product_summary2 = tk.Label(self.main_root, text = "CUSTO", font = self.entrylabel_font, justify = "center")
-        self.main_menu.product_summary2.place(x = 520, y = 440, width = 50)
+        self.main_menu.product_summary2.place(x = 520, y = 435, width = 50)
         self.main_menu.product_summary3 = tk.Label(self.main_root, text = "STOCK", font = self.entrylabel_font, justify = "center")
-        self.main_menu.product_summary3.place(x = 570, y = 440, width = 50)
+        self.main_menu.product_summary3.place(x = 570, y = 435, width = 50)
         self.main_menu.product_listboxes = []
         self.main_menu.product_scrollbar = tk.Scrollbar(orient = "vertical", command = self.on_scrollbar_products)
-        self.main_menu.product_scrollbar.place(x = 630, y = 300, width = 15, height = 488)
+        self.main_menu.product_scrollbar.place(x = 630, y = 300, width = 15, height = 255)
         self.main_menu.product_names = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.product_listboxes, self.main_menu.product_scrollbar, self.main_menu.product_names))
-        self.main_menu.product_names.place(x = 320, y = 460, width = 200, height = 330)
+        self.main_menu.product_names.place(x = 320, y = 455, width = 200, height = 100)
         self.main_menu.product_buyprice = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.product_listboxes, self.main_menu.product_scrollbar, self.main_menu.product_buyprice))
-        self.main_menu.product_buyprice.place(x = 520, y = 460, width = 50, height = 330)
+        self.main_menu.product_buyprice.place(x = 520, y = 455, width = 50, height = 100)
         self.main_menu.product_stock = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.product_listboxes, self.main_menu.product_scrollbar, self.main_menu.product_stock))
-        self.main_menu.product_stock.place(x = 570, y = 460, width = 50, height = 330)
+        self.main_menu.product_stock.place(x = 570, y = 455, width = 50, height = 100)
         self.main_menu.product_listboxes.append(self.main_menu.product_names)
         self.main_menu.product_listboxes.append(self.main_menu.product_buyprice)
         self.main_menu.product_listboxes.append(self.main_menu.product_stock)
+        #new/update/remove debts
+        self.main_menu.newdebt_summary1 = tk.Label(self.main_root, text = "NOME", font = self.entrylabel_font)
+        self.main_menu.newdebt_summary1.place(x = 320, y = 563)
+        self.main_menu.newdebt_input1 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
+        self.main_menu.newdebt_input1.place(x = 470, y = 560, width = 150, height = 25)
+        self.main_menu.newdebt_summary2 = tk.Label(self.main_root, text = "VALOR (DICA: USE  ' ± ' )", font = self.entrylabel_font)
+        self.main_menu.newdebt_summary2.place(x = 320, y = 588)
+        self.main_menu.newdebt_input2 = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
+        self.main_menu.newdebt_input2.place(x = 470, y = 585, width = 150, height = 25)
+        self.main_menu.newdebt_finish = tk.Button(self.main_root, text = "ADD/UPD DÉBITO", font = self.button_font, command = lambda *args : Interface.debt_button(self))
+        self.main_menu.newdebt_finish.place(x = 320, y = 615, width = 300, height = 25)
+        self.main_menu.debts_remove = tk.Button(self.main_root, text = "REMOVER DÉBITO", font = self.button_font, command = lambda *args : Interface.remove_debt(self))
+        self.main_menu.debts_remove.place(x = 320, y = 645, width = 300, height = 25)
+        #debts table
+        self.main_menu.debts_listboxes = []
+        self.main_menu.debts_scrollbar = tk.Scrollbar(orient = "vertical", command = self.on_scrollbar_debts)
+        self.main_menu.debts_scrollbar.place(x = 630, y = 555, width = 15, height = 240)
+        self.main_menu.debts_summary1 = tk.Label(self.main_root, text = "NOME", font = self.entrylabel_font, justify = "center")
+        self.main_menu.debts_summary1.place(x = 320, y = 670, width = 200)
+        self.main_menu.debts_summary2 = tk.Label(self.main_root, text = "VALOR", font = self.entrylabel_font, justify = "center")
+        self.main_menu.debts_summary2.place(x = 520, y = 670, width = 100)
+        self.main_menu.debts_names = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.debts_listboxes, self.main_menu.debts_scrollbar, self.main_menu.debts_names))
+        self.main_menu.debts_names.place(x = 320, y = 690, width = 200, height = 100)
+        self.main_menu.debts_values = tk.Listbox(self.main_root, font = self.table_font, justify = "center", yscrollcommand = lambda *args : Interface.on_scroll(self.main_menu.debts_listboxes, self.main_menu.debts_scrollbar, self.main_menu.debts_values))
+        self.main_menu.debts_values.place(x = 520, y = 690, width = 100, height = 100)
+        self.main_menu.debts_listboxes.append(self.main_menu.debts_names)
+        self.main_menu.debts_listboxes.append(self.main_menu.debts_values)
         #insights
         self.main_menu.insight_button_qtd = tk.Button(self.main_root, text = "INSIGHTS DE QTD", font = self.button_font, command = lambda *args : Interface.show_temp_matplot_pie_chart(Interface.get_trades_qtd_insights(), "quantity_insights"))
         self.main_menu.insight_button_qtd.place(x = 655, y = 300, width = 260, height = 25)
@@ -362,6 +390,7 @@ class Interface:
         #main_loop thread, update tables, configs, tkinter mainloop
         Interface.update_trades_table(self)
         Interface.update_product_table(self)
+        Interface.update_debts_table(self)
         threading.Thread(target = Interface.main_loop, args = (self,)).start()
         self.main_root.mainloop()
 
@@ -387,12 +416,14 @@ class Interface:
         Vars.encryption_key = self.main_menu.new_password1.get()
         Interface.full_update_products()
         Interface.full_update_trades()
+        Interface.full_update_debts()
         os._exit(0)
 
     #fecha o programa
     def exit() -> None:
         Interface.update_products()
         Interface.update_trades()
+        Interface.update_debts()
         os._exit(0)
 
     #mostra um gráfico de pizza temporário
@@ -438,11 +469,13 @@ class Interface:
         self.main_menu.trade_profit.yview(*args)
         self.main_menu.trade_date.yview(*args)
 
+    def on_scrollbar_debts(self, *args) -> None:
+        self.main_menu.debts_names.yview(*args)
+        self.main_menu.debts_values.yview(*args)
+
     #atualiza tabela de produtos
     def update_product_table(self) -> None:
         Interface.reset_product_table(self)
-        self.main_menu.trade_input1['menu'].delete(0, 'end')
-        self.main_menu.trade_input1_variable.set("selecione")
         for product_name in Vars.products.keys():
             self.main_menu.product_names.insert(0, product_name)
             self.main_menu.product_buyprice.insert(0, round(Vars.products[product_name]['buy_price'], 2))
@@ -496,6 +529,18 @@ class Interface:
         self.main_menu.trade_profit.delete(0, tk.END)
         self.main_menu.trade_date.delete(0, tk.END)
 
+    #atualiza a tabela de débitos
+    def update_debts_table(self) -> None:
+        Interface.reset_debts_table(self)
+        for debt in Vars.debts.keys():
+            self.main_menu.debts_names.insert(0, debt)
+            self.main_menu.debts_values.insert(0, Vars.debts[debt]['value'])
+
+    #limpa a tabela de débitos
+    def reset_debts_table(self) -> None:
+        self.main_menu.debts_names.delete(0, tk.END)
+        self.main_menu.debts_values.delete(0, tk.END)
+
     #ação do botão de remover transação
     def remove_a_trade(self) -> None:
         Vars.sleeping_time = 0
@@ -520,6 +565,7 @@ class Interface:
             del Vars.products[trade_product]['encrypted_line']
         except:
             pass
+        Vars.next_trade_id -= 1
         Interface.update_trades_table(self)
         Interface.update_product_table(self)
 
@@ -614,6 +660,40 @@ class Interface:
         except:
             pass
 
+    #ação do botão de add/upd débito
+    def debt_button(self) -> None:
+        Vars.sleeping_time = 0
+        try:
+            debt_name = self.main_menu.newdebt_input1.get().lower()
+            debt_value = self.main_menu.newdebt_input2.get()
+            if debt_name not in Vars.debts.keys():
+                Vars.debts[debt_name] = {'value':float(debt_value)}
+            else:
+                if "+" in debt_value:
+                    Vars.debts[debt_name]['value'] += float(debt_value)
+                elif "-" in debt_value:
+                    Vars.debts[debt_name]['value'] -= float(debt_value)
+                else:
+                    Vars.debts[debt_name]['value'] = float(debt_value)
+                try:
+                    del Vars.debts[debt_name]['encrypted_line']
+                except:
+                    pass
+            Interface.update_debts_table(self)
+        except Exception as e:
+            print(str(e))
+            pass
+
+    #ação do botão de remover débito
+    def remove_debt(self) -> None:
+        Vars.sleeping_time = 0
+        debt_name = self.main_menu.newdebt_input1.get().lower()
+        try:
+            del Vars.debts[debt_name]
+        except:
+            pass
+        Interface.update_debts_table(self)
+
     #carrega dados de um trade nos campos de entrada de transações
     def load_trade_info(self) -> None:
         Vars.sleeping_time = 0
@@ -672,6 +752,8 @@ class Interface:
             Interface.verify_date(from_date)
             if to_date != "":
                 Interface.verify_date(to_date)
+            else:
+                to_date = General.atual_date()
             product_info = Interface.get_product_info(name, from_date, to_date)
             self.main_menu.search_product_result_profit['text'] = f"LUCRO DO PRODUTO: {product_info['profit']}"
             self.main_menu.search_product_result_totalbuyers['text'] = f"TOTAL DE COMPRADORES: {product_info['sold_buyers']}"
@@ -760,6 +842,32 @@ class Interface:
                     if key != "encrypted_line" and key != "id" and key != "unix_date":
                         message = f"{message}{trade[key]},"
                 message = message[0:len(message)-1]
+                encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
+                f.write(f"{encrypted_message}\n")
+            print()
+
+    #se aproveita da criptografia pronta para salvar o arquivo de transações
+    def update_debts() -> None:
+        with open("debts.txt", "w") as f:
+            pass
+        with open("debts.txt", "a") as f:
+            for debt in Vars.debts.keys():
+                if "encrypted_line" not in Vars.debts[debt].keys():
+                    message = f"{debt},{Vars.debts[debt]['value']}"
+                    encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
+                    f.write(f"{encrypted_message}\n")
+                else:
+                    f.write(f"{Vars.debts[debt]['encrypted_line']}\n")
+
+    #refaz a criptografia para salvar arquivo de transações
+    def full_update_debts() -> None:
+        with open("debts.txt", "w") as f:
+            pass
+        amount_debts = len(Vars.debts)
+        with open("debts.txt", "a") as f:
+            for index, debt in enumerate(Vars.debts.keys()):
+                print(f"WRITING DEBT {index + 1} of {amount_debts}", end = "\r")
+                message = f"{debt},{Vars.debts[debt]['value']}"
                 encrypted_message = Encryption.password_encrypt(message, Vars.encryption_key)
                 f.write(f"{encrypted_message}\n")
             print()

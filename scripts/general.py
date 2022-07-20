@@ -13,7 +13,7 @@ class General:
             os.system("clear")
 
     def atual_date():
-        return time.strftime("%d/%b/%y")
+        return time.strftime("%x")
 
     def get_password(value: str, character_substitute: str = "*", resize_adjust: bool = True) -> str:
         password = ''

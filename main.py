@@ -16,6 +16,7 @@ if __name__ == "__main__":
     try:
         Loader.load_products()
         Loader.load_trades()
+        Loader.load_debts()
         # esse código serve para atualizar products.txt e trades.txt durante desenvolvimento
         # Interface.full_update_trades()
         # os._exit(0)
