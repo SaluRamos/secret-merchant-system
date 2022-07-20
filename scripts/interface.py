@@ -19,11 +19,12 @@ class Interface:
 
     #verifica se uma str compreende as regras que uma data deve obdecer para ser processada pelo software
     def verify_date(transaction_date: str) -> None:
-        transaction_date = transaction_date.lower()
-        trade_year = transaction_date.split("/")[2]
-        trade_day = int(transaction_date.split("/")[0])
+        transaction_date = transaction_date.lower().replace("-", "/")
+        trade_year = str(abs(int(transaction_date.split("/")[2])))
+        trade_month = abs(int(transaction_date.split("/")[1]))
+        trade_day = abs(int(transaction_date.split("/")[0]))
         int(trade_year) #year_verification
-        if len(transaction_date.split("/")) != 3 or len(trade_year) == 1 or len(trade_year) == 3 or trade_day > 31:
+        if len(trade_year) != 4 or trade_day > 31 or trade_month > 12:
             raise Exception("BAD_DATE")
 
     #retorna o timestamp de uma data (com horas as 00:00:00, GMT-0300 (Brasilia Standard Time))
@@ -33,10 +34,7 @@ class Interface:
             trade_year = int(f"20{trade_date.split('/')[2]}")
         else:
             trade_year = int(trade_date.split('/')[2])
-        if trade_date.split("/")[1] not in Vars.months_to_number.keys():
-            trade_month = int(trade_date.split("/")[1])
-        else:
-            trade_month = Vars.months_to_number[trade_date.split("/")[1]]
+        trade_month = int(trade_date.split("/")[1])
         trade_dt = datetime.datetime(trade_year, trade_month, int(trade_date.split("/")[0])) #year, month, day
         trade_timestamp = trade_dt.replace(tzinfo = datetime.timezone.utc).timestamp()
         return trade_timestamp + 10800
@@ -55,7 +53,7 @@ class Interface:
     #retorna informações sobre determinado produto desde certa data
     def get_product_info(product_name: str, from_date: str, to_date: str) -> dict:
         if to_date == "":
-            to_date = time.time()
+            to_date = General.atual_date()
         profit = 0
         sold_quantity = 0
         sold_buyers = 0
@@ -199,7 +197,7 @@ class Interface:
         self.main_menu.sort_trade_input = tk.OptionMenu(self.main_root, self.main_menu.sort_trade_variable, *['data', 'id'])
         self.main_menu.sort_trade_input.place(x = 1065, y = 8, width = 50, height = 25)
         self.main_menu.sort_trade_input.config(indicatoron = False)
-        self.main_menu.update_trades = tk.Button(self.main_root, text = "UPD TRANSAÇÕES", font = self.button_font, command = lambda *args : Interface.update_trades_table(self))
+        self.main_menu.update_trades = tk.Button(self.main_root, text = "UPD TABELAS", font = self.button_font, command = lambda *args : Interface.update_tables(self))
         self.main_menu.update_trades.place(x = 965, y = 35, width = 150, height = 25)
         #new/update/remove trade
         self.main_menu.trade_summary1 = tk.Label(self.main_root, text = "PRODUTO", font = self.entrylabel_font)
@@ -243,7 +241,7 @@ class Interface:
         self.main_menu.trade_profit_variable.set("...")
         self.main_menu.trade_output7 = tk.Label(self.main_root, textvariable = self.main_menu.trade_profit_variable, font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_output7.place(x = 160, y = 450, width = 150)
-        self.main_menu.trade_summary8 = tk.Label(self.main_root, text = "DATA (DIA / MÊS / ANO)", font = self.entrylabel_font)
+        self.main_menu.trade_summary8 = tk.Label(self.main_root, text = "DATA (DD / MM / YYYY)", font = self.entrylabel_font)
         self.main_menu.trade_summary8.place(x = 10, y = 478)
         self.main_menu.trade_input8 = tk.Entry(self.main_root, text = "", font = self.entrylabel_font, justify = "center")
         self.main_menu.trade_input8.place(x = 160, y = 475, width = 150, height = 25)
@@ -367,11 +365,11 @@ class Interface:
         self.main_menu.search_summary1.place(x = 655, y = 362)
         self.main_menu.search_name = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.search_name.place(x = 805, y = 360, width = 150, height = 25)
-        self.main_menu.search_summary2 = tk.Label(self.main_root, text = "DESDE (DIA / MÊS / ANO)", font = self.entrylabel_font)
+        self.main_menu.search_summary2 = tk.Label(self.main_root, text = "DESDE (DD / MM / YYYY)", font = self.entrylabel_font)
         self.main_menu.search_summary2.place(x = 655, y = 387)
         self.main_menu.search_fromdate = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.search_fromdate.place(x = 805, y = 385, width = 150, height = 25)
-        self.main_menu.search_summary3 = tk.Label(self.main_root, text = "ATÉ (DIA / MÊS / ANO)", font = self.entrylabel_font)
+        self.main_menu.search_summary3 = tk.Label(self.main_root, text = "ATÉ (DD / MM / YYYY)", font = self.entrylabel_font)
         self.main_menu.search_summary3.place(x = 655, y = 412)
         self.main_menu.search_todate = tk.Entry(self.main_root, font = self.entrylabel_font, justify = "center")
         self.main_menu.search_todate.place(x = 805, y = 410, width = 150, height = 25)
@@ -392,7 +390,14 @@ class Interface:
         Interface.update_product_table(self)
         Interface.update_debts_table(self)
         threading.Thread(target = Interface.main_loop, args = (self,)).start()
+        self.main_root.focus_force()
         self.main_root.mainloop()
+
+    #atualiza todas as tabelas
+    def update_tables(self) -> None:
+        Interface.update_trades_table(self)
+        Interface.update_product_table(self)
+        Interface.update_debts_table(self)
 
     #define ação para focagem de um campo de senha
     def password_foc_in(entry, text) -> None:
@@ -491,6 +496,8 @@ class Interface:
     #atualiza a tabela de transações
     def update_trades_table(self) -> None:
         Interface.reset_trades_table(self)
+        self.main_menu.trade_input1['menu'].delete(0, 'end')
+        self.main_menu.trade_input1_variable.set("selecione")
         sort_type = self.main_menu.sort_trade_variable.get()
         if sort_type == "data":
             trades = sorted(Vars.trades, key = lambda d: d['unix_date'], reverse = False)
@@ -509,7 +516,7 @@ class Interface:
             if trade['comission_percent'] == 0:
                 self.main_menu.trade_profit.insert(0, trade['profit'])
             else:
-                comission_percent = round(trade['comission_percent']/100, 2)
+                comission_percent = round(float(trade['comission_percent'])/100, 2)
                 comission_name = trade['comission_name']
                 trade_profit = round(trade['profit']*(1-comission_percent), 2)
                 comission_amount = round(trade['profit']*comission_percent, 2)
@@ -565,7 +572,10 @@ class Interface:
             del Vars.products[trade_product]['encrypted_line']
         except:
             pass
-        Vars.next_trade_id -= 1
+        for index, trade in enumerate(Vars.trades):
+            if trade['id'] > trade_index:
+                Vars.trades[index]['id'] -= 1
+        Vars.next_trade_id = len(Vars.trades)
         Interface.update_trades_table(self)
         Interface.update_product_table(self)
 
@@ -592,7 +602,7 @@ class Interface:
             profit = float(self.main_menu.trade_output7['text'])
             comission_name = self.main_menu.trade_input10.get().lower()
             if self.main_menu.trade_input9.get() == "":
-                comission_percent = "0"
+                comission_percent = 0
             else:
                 if comission_name == "":
                     raise Exception("COMISSION_NAME_IN_BLANK")
@@ -600,7 +610,7 @@ class Interface:
             if self.main_menu.trade_input8.get() == "":
                 transaction_date = General.atual_date()
             else:
-                transaction_date = self.main_menu.trade_input8.get()
+                transaction_date = self.main_menu.trade_input8.get().replace("-", "/")
                 Interface.verify_date(transaction_date)
             update_index = self.main_menu.trade_finish_index.get()
             unix_date = Interface.get_date_timestamp(transaction_date)
@@ -680,8 +690,7 @@ class Interface:
                 except:
                     pass
             Interface.update_debts_table(self)
-        except Exception as e:
-            print(str(e))
+        except:
             pass
 
     #ação do botão de remover débito
@@ -713,7 +722,7 @@ class Interface:
         self.main_menu.trade_input5.insert(0, Vars.trades[trade_index]['buyer_name'])
         self.main_menu.trade_input8.delete(0, tk.END)
         self.main_menu.trade_input8.insert(0, Vars.trades[trade_index]['transaction_date'])
-        if  Vars.trades[trade_index]['comission_percent'] != "0":
+        if Vars.trades[trade_index]['comission_percent'] != 0:
             self.main_menu.trade_input9.delete(0, tk.END)
             self.main_menu.trade_input9.insert(0, Vars.trades[trade_index]['comission_percent'])
             self.main_menu.trade_input10.delete(0, tk.END)
@@ -750,10 +759,6 @@ class Interface:
             from_date = self.main_menu.search_fromdate.get()
             to_date = self.main_menu.search_todate.get()
             Interface.verify_date(from_date)
-            if to_date != "":
-                Interface.verify_date(to_date)
-            else:
-                to_date = General.atual_date()
             product_info = Interface.get_product_info(name, from_date, to_date)
             self.main_menu.search_product_result_profit['text'] = f"LUCRO DO PRODUTO: {product_info['profit']}"
             self.main_menu.search_product_result_totalbuyers['text'] = f"TOTAL DE COMPRADORES: {product_info['sold_buyers']}"
@@ -768,6 +773,8 @@ class Interface:
             name = self.main_menu.search_name.get().lower()
             from_date = self.main_menu.search_fromdate.get()
             to_date = self.main_menu.search_todate.get()
+            if to_date == "":
+                to_date = General.atual_date()
             Interface.verify_date(from_date)
             if to_date != "":
                 Interface.verify_date(to_date)
@@ -780,8 +787,7 @@ class Interface:
                     if trade_timestamp >= min_valid_timestamp and trade_timestamp <= max_valid_timestamp:
                         comission_profit += trade['profit']*(trade['comission_percent']/100)
             self.main_menu.search_comission_result_profit['text'] = f"LUCRO DE: {round(comission_profit, 2)}"
-        except Exception as e:
-            print(str(e))
+        except:
             pass
 
     #se aproveita da criptografia pronta para salvar o arquivo de produtos

@@ -20,7 +20,8 @@ if __name__ == "__main__":
         # esse código serve para atualizar products.txt e trades.txt durante desenvolvimento
         # Interface.full_update_trades()
         # os._exit(0)
-    except:
+    except Exception as e:
+        print(str(e))
         print("different password!         ")
         sure = input("are you sure (y/n)? ")
         if sure.lower() == "y":
