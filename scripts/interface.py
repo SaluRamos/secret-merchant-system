@@ -513,15 +513,19 @@ class Interface:
             self.main_menu.trade_ids.insert(0, f"{trade['id'] + 1}")
             self.main_menu.trade_names.insert(0, f"{trade['product']}")
             self.main_menu.trade_quantity.insert(0, trade['quantity'])
-            self.main_menu.trade_sellprice.insert(0, trade['sell_price'])
+            if trade['total_cost'] - trade['profit'] > 0:
+                profit_percent = round((trade['sell_price']/((trade['total_cost']-trade['profit'])/trade['quantity'])-1)*100, 2)
+            else:
+                profit_percent = 100
+            self.main_menu.trade_sellprice.insert(0, f"{trade['sell_price']} ({profit_percent}%)")
             self.main_menu.trade_method.insert(0, trade['payment_method'])
             self.main_menu.trade_buyer.insert(0, trade['buyer_name'])
             self.main_menu.trade_cost.insert(0, trade['total_cost'])
             if trade['comission_percent'] == 0:
                 self.main_menu.trade_profit.insert(0, trade['profit'])
             else:
-                comission_percent = round(float(trade['comission_percent'])/100, 2)
                 comission_name = trade['comission_name']
+                comission_percent = round(float(trade['comission_percent'])/100, 2)
                 trade_profit = round(trade['profit']*(1-comission_percent), 2)
                 comission_amount = round(trade['profit']*comission_percent, 2)
                 self.main_menu.trade_profit.insert(0, f"{trade_profit} / {comission_amount} ({comission_percent*100}% {comission_name})")
@@ -663,7 +667,6 @@ class Interface:
                     new_trade['comission_percent'] = comission_percent
                     new_trade['comission_name'] = comission_name
                     Vars.trades.append(new_trade)
-                Vars.products[product_name]['stock'] -= updated_trade_quantity
             else:
                 raise Exception("NO_STOCK")
             Vars.products[product_name]['stock'] -= quantity
